@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Влад Коломийцев](https://up.htmlacademy.ru/ecmascript/8/user/607609).
-* Наставник: `Неизвестно`.
+* Наставник: [Максим Назаров](https://htmlacademy.ru/profile/id927883).
 
 ---
 
