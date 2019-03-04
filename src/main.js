@@ -1,76 +1,76 @@
 import filterTemplate from '../src/filter.js';
 import pointTemplate from '../src/point.js';
 
-const filtersBlock = document.querySelector(".trip-filter");
-const pointsBlock = document.querySelector(".trip-day__items");
+const filtersBlock = document.querySelector(`.trip-filter`);
+const pointsBlock = document.querySelector(`.trip-day__items`);
 
 const FILTERS_ARRAY = [{
-    name: 'everything',
+    name: `everything`,
     check: true
   },
   {
-    name: 'future'
+    name: `future`
   },
   {
-    name: 'past'
+    name: `past`
   }
 ];
 
 const POINT_ARRAY = [{
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   },
   {
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   },
   {
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   },
   {
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   },
   {
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   },
   {
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   },
   {
-    icon: '🚕',
-    title: 'Check into a hotel',
-    start: '10:00',
-    end: '11:00',
-    hours: '1h 30m',
-    price: '20'
+    icon: `🚕`,
+    title: `Check into a hotel`,
+    start: `10:00`,
+    end: `11:00`,
+    hours: `1h 30m`,
+    price: `20`
   }
 ];
 
@@ -87,7 +87,7 @@ const renderPoints = function (element) {
 };
 
 const removeFilters = () => {
-  let filters = document.querySelectorAll('.trip-point');
+  let filters = document.querySelectorAll(`.trip-point`);
   if (filters) {
     filters.forEach(function (item) {
       item.remove();
@@ -107,7 +107,7 @@ const renderRandomPoints = (num, array) => {
   }
 }
 
-filtersBlock.addEventListener('click', () => {
+filtersBlock.addEventListener(`click`, () => {
   renderRandomPoints(7, POINT_ARRAY);
 });
 
