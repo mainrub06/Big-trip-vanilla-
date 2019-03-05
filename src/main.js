@@ -95,12 +95,13 @@ const removeFilters = () => {
   }
 };
 
+const random = (min, max) => {
+  let rand = min - 0.5 + Math.random() * (max - min + 1);
+  rand = Math.round(rand);
+  return rand;
+};
+
 const renderRandomPoints = (num, array) => {
-  let random = (min, max) => {
-    let rand = min - 0.5 + Math.random() * (max - min + 1);
-    rand = Math.round(rand);
-    return rand;
-  };
   removeFilters();
   for (let i = 0; i < random(0, num); i++) {
     renderPoints(array[i]);
