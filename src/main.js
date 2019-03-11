@@ -1,78 +1,10 @@
 import filterTemplate from '../src/filter.js';
-import pointTemplate from '../src/point.js';
+import {makePoint} from '../src/point.js';
+import {FILTERS_ARRAY, makeRandomEvent} from '../src/data.js';
+import {random} from "../src/utils.js";
 
 const filtersBlock = document.querySelector(`.trip-filter`);
 const pointsBlock = document.querySelector(`.trip-day__items`);
-
-const FILTERS_ARRAY = [{
-  name: `everything`,
-  check: true
-},
-{
-  name: `future`
-},
-{
-  name: `past`
-}
-];
-
-const POINT_ARRAY = [{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-},
-{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-},
-{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-},
-{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-},
-{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-},
-{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-},
-{
-  icon: `🚕`,
-  title: `Check into a hotel`,
-  start: `10:00`,
-  end: `11:00`,
-  hours: `1h 30m`,
-  price: `20`
-}
-];
 
 const renderFilters = function (element) {
   const filter = document.createElement(`template`);
@@ -82,7 +14,7 @@ const renderFilters = function (element) {
 
 const renderPoints = function (element) {
   const point = document.createElement(`template`);
-  point.innerHTML = pointTemplate(element);
+  point.innerHTML = makePoint(element);
   pointsBlock.appendChild(point.content);
 };
 
@@ -95,12 +27,6 @@ const removeFilters = () => {
   }
 };
 
-const random = (min, max) => {
-  let rand = min - 0.5 + Math.random() * (max - min + 1);
-  rand = Math.round(rand);
-  return rand;
-};
-
 const renderRandomPoints = (num, array) => {
   removeFilters();
   for (let i = 0; i < random(0, num); i++) {
@@ -109,13 +35,21 @@ const renderRandomPoints = (num, array) => {
 };
 
 filtersBlock.addEventListener(`click`, () => {
-  renderRandomPoints(7, POINT_ARRAY);
+  renderRandomPoints(7, eventsArr);
 });
 
 FILTERS_ARRAY.forEach((item) => {
   renderFilters(item);
 });
 
-POINT_ARRAY.forEach((item) => {
+const eventsArr = [];
+
+for(let i = 0; i < 7; i++) {
+  eventsArr.push(makeRandomEvent());
+}
+
+eventsArr.forEach((item) => {
   renderPoints(item);
 });
+
+
