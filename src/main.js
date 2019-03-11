@@ -44,7 +44,7 @@ FILTERS_ARRAY.forEach((item) => {
 
 const eventsArr = [];
 
-for(let i = 0; i < 7; i++) {
+for (let i = 0; i < 7; i++) {
   eventsArr.push(makeRandomEvent());
 }
 

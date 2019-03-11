@@ -43,8 +43,6 @@ const getRandomOffers = (offers) => {
   return arrayOffers;
 };
 
-console.log(getRandomOffers(DATA_POINTS.OFFERS));
-
 const getTimePoints = () => {
   const timePoint = Date.now();
   const timeStart = convertTime(timePoint, TIME_OPTIONS);
