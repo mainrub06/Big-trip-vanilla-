@@ -3,3 +3,5 @@ export const random = (min, max) => {
   rand = Math.round(rand);
   return rand;
 };
+
+export const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.length)];

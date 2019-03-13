@@ -1,4 +1,4 @@
-import {random} from "../src/utils.js";
+import {random, getRandomArrayItem} from "../src/utils.js";
 
 export const FILTERS_ARRAY = [{
   name: `everything`,
@@ -12,7 +12,10 @@ export const FILTERS_ARRAY = [{
 }
 ];
 
-const TIME_SHIFT = 2 * 60 * 60 * 1000;
+const timeShift = () => {
+  return random(0, 12) * random(2, 60) * 60 * 1000;
+};
+
 const TIME_OPTIONS = {hour: `numeric`, minute: `numeric`, hour12: false};
 
 export const DATA_POINTS = {
@@ -34,29 +37,31 @@ export const DATA_POINTS = {
 };
 
 const convertTime = (time, options, locale = `en-US`) => new Date(time).toLocaleString(locale, options);
+const GMT_RUSSIA = 3 * 60 * 60 * 1000;
 
 const getRandomOffers = (offers) => {
   const arrayOffers = [];
   for (let item = 0; item < random(0, 2); item++) {
-    arrayOffers.push(offers[random(0, offers.length)]);
+    arrayOffers.push(getRandomArrayItem(offers));
   }
   return arrayOffers;
 };
 
 const getTimePoints = () => {
   const timePoint = Date.now();
+  const duration = timeShift();
   const timeStart = convertTime(timePoint, TIME_OPTIONS);
-  const timeEnd = convertTime(timePoint + TIME_SHIFT, TIME_OPTIONS);
-  return [timeStart, timeEnd];
+  const timeEnd = convertTime(timePoint + duration + GMT_RUSSIA, TIME_OPTIONS);
+  const timeDuration = convertTime(duration, TIME_OPTIONS);
+  const durationObj = timeDuration.split(`:`);
+  return [timeStart, timeEnd, durationObj];
 };
 
-const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
 const getRandomTypePoint = () => {
-  let resArr = getRandomArrayItem(Object.entries(DATA_POINTS.POINTS_TYPE));
+  let [typeName, icon] = getRandomArrayItem(Object.entries(DATA_POINTS.POINTS_TYPE));
   return {
-    typeName: resArr[0],
-    icon: resArr[1]
+    typeName,
+    icon
   };
 };
 
@@ -73,10 +78,9 @@ const getRandomDescription = (text) => {
 export const makeRandomEvent = () => ({
   type: getRandomTypePoint(),
   time: getTimePoints(),
-  city: DATA_POINTS.CITIES[random(0, DATA_POINTS.CITIES.length)],
+  city: DATA_POINTS.CITIES[random(0, DATA_POINTS.CITIES.length - 1)],
   picture: `http://picsum.photos/300/150?r=${Math.random()}`,
   price: random(10, 40),
-  duration: `1h 00m`,
   offers: getRandomOffers(DATA_POINTS.OFFERS),
   description: getRandomDescription(DATA_POINTS.DESCRIPTION_TEXT)
 });
