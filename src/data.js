@@ -1,4 +1,4 @@
-import {random, getRandomArrayItem} from "../src/utils.js";
+import {random, getRandomArrayItem, getRandomArray} from "../src/utils.js";
 
 export const FILTERS_ARRAY = [{
   name: `everything`,
@@ -32,20 +32,12 @@ export const DATA_POINTS = {
     'Restaurant': `🍴`,
   },
   CITIES: [`Moscow`, `Monterrey`, `Washington`, `Paris`, `London`, `Frankfurt`, `Florence`, `Rom`, `Velington`],
-  OFFERS: [[`Add luggage`, 15], [`Switch to comfort class`, 55], [`Add meal`, 76], [`Choose seats`, 33]],
+  OFFERS: [[`Add luggage`, random(5, 100)], [`Switch to comfort class`, random(5, 100)], [`Add meal`, random(5, 100)], [`Choose seats`, random(5, 100)]],
   DESCRIPTION_TEXT: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
 };
 
 const convertTime = (time, options, locale = `en-US`) => new Date(time).toLocaleString(locale, options);
 const GMT_RUSSIA = 3 * 60 * 60 * 1000;
-
-const getRandomOffers = (offers) => {
-  const arrayOffers = [];
-  for (let item = 0; item < random(0, 2); item++) {
-    arrayOffers.push(getRandomArrayItem(offers));
-  }
-  return arrayOffers;
-};
 
 const getTimePoints = () => {
   const timePoint = Date.now();
@@ -81,6 +73,6 @@ export const makeRandomEvent = () => ({
   city: DATA_POINTS.CITIES[random(0, DATA_POINTS.CITIES.length - 1)],
   picture: `http://picsum.photos/300/150?r=${Math.random()}`,
   price: random(10, 40),
-  offers: getRandomOffers(DATA_POINTS.OFFERS),
+  offers: getRandomArray(DATA_POINTS.OFFERS, 2),
   description: getRandomDescription(DATA_POINTS.DESCRIPTION_TEXT)
 });
