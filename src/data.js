@@ -1,4 +1,8 @@
-import {random, getRandomArrayItem, getRandomArray} from "../src/utils.js";
+import {
+  random,
+  getRandomArrayItem,
+  getRandomArray
+} from "../src/utils.js";
 
 export const FILTERS_ARRAY = [{
   name: `everything`,
@@ -13,10 +17,18 @@ export const FILTERS_ARRAY = [{
 ];
 
 const timeShift = () => {
-  return random(0, 12) * random(2, 60) * 60 * 1000;
+  const hours = random(0, 24);
+  const min = random(1, 60);
+  const timeMs = (hours * 60 * 60 * 1000) + (min * 60 * 1000);
+
+  return [hours, min, timeMs];
 };
 
-const TIME_OPTIONS = {hour: `numeric`, minute: `numeric`, hour12: false};
+const TIME_OPTIONS = {
+  hour: `numeric`,
+  minute: `numeric`,
+  hour12: false
+};
 
 export const DATA_POINTS = {
   POINTS_TYPE: {
@@ -36,17 +48,14 @@ export const DATA_POINTS = {
   DESCRIPTION_TEXT: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
 };
 
-const convertTime = (time, options, locale = `en-US`) => new Date(time).toLocaleString(locale, options);
-const GMT_RUSSIA = 3 * 60 * 60 * 1000;
+const convertTime = (time, options, locale = `en-GB`) => new Date(time).toLocaleString(locale, options);
 
 const getTimePoints = () => {
   const timePoint = Date.now();
   const duration = timeShift();
   const timeStart = convertTime(timePoint, TIME_OPTIONS);
-  const timeEnd = convertTime(timePoint + duration + GMT_RUSSIA, TIME_OPTIONS);
-  const timeDuration = convertTime(duration, TIME_OPTIONS);
-  const durationObj = timeDuration.split(`:`);
-  return [timeStart, timeEnd, durationObj];
+  const timeEnd = convertTime(timePoint + duration[2], TIME_OPTIONS);
+  return [timeStart, timeEnd, duration];
 };
 
 const getRandomTypePoint = () => {
