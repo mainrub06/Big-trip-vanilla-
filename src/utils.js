@@ -20,14 +20,6 @@ const shuffle = (arr) => {
 };
 
 export const getRandomArray = (arr, num) => {
-  const emptyArr = [];
   const newArray = shuffle(arr);
-
-  for (let i = 0; i < num; i++) {
-    if (emptyArr.includes(newArray[i]) === false) {
-      emptyArr.push(newArray[i]);
-    }
-  }
-
-  return emptyArr;
+  return newArray.slice(0, num);
 };
