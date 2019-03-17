@@ -12,7 +12,7 @@ Thumbs.db
 node_modules/
 
 # Папка с собранными файлами проекта
-build/
-public/
+public/bundle.js
+public/*.map
 src/indexbash.html
 src/jsbash.js
