@@ -1,16 +1,16 @@
 import {createElement} from "../src/utils.js";
 
-export class eventItem {
+export class EventItem {
   constructor(data) {
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
     this._picture = data.picture;
     this._price = data.price;
-    this._offers =  data.offers ;
+    this._offers = data.offers;
     this._description = data.description;
 
-    this._element = null;
+    this._element = createElement(this.template).firstElementChild;
     this._state = {
       // Состояние компонента
     };
@@ -18,7 +18,7 @@ export class eventItem {
   }
 
   _onEditButtonClick() {
-    typeof this._onEdit === `function` && this._onEdit();
+    typeof this._onEdit === (`function` && this._onEdit());
   }
 
   set onEdit(fn) {
@@ -48,15 +48,14 @@ export class eventItem {
     return htmlBtnOffer;
   }
 
-
-
   bind() {
     this._element.querySelector(`.trip-icon`)
-        .addEventListener(`click`, this._onEditButtonClick.bind(this));
+      .addEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
   unbind() {
-    // Удаление обработчиков
+    this._element.querySelector(`.trip-icon`)
+      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
   get element() {
@@ -64,14 +63,7 @@ export class eventItem {
   }
 
   render() {
-    this._element = createElement(this.template);
     this.bind();
     return this._element;
   }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
-  }
-
-};
+}

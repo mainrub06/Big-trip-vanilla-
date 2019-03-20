@@ -1,16 +1,15 @@
 import {createElement} from "../src/utils.js";
 
-export class eventItemEdit {
+export class EventItemEdit {
   constructor(data) {
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
     this._picture = data.picture;
     this._price = data.price;
-    this._offers =  data.offers ;
+    this._offers = data.offers;
     this._description = data.description;
-
-    this._element = null;
+    this._element = createElement(this.template).firstElementChild;
     this._state = {
       // Состояние компонента
     };
@@ -27,19 +26,6 @@ export class eventItemEdit {
   }
 
   get template() {
-    `<article class="trip-point">
-    <i class="trip-icon">${this._type.icon}</i>
-    <h3 class="trip-point__title">${this._type.typeName} to ${this._city}</h3>
-    <p class="trip-point__schedule">
-      <span class="trip-point__timetable">${this._time[0]}&nbsp;&mdash; ${this._time[1]}</span>
-      <span class="trip-point__duration">${this._time[2][0]}h ${this._time[2][1]}m</span>
-    </p>
-    <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
-    <ul class="trip-point__offers">
-      ${this.makeOffer(this._offers)}
-    </ul>
-    </article>`.trim();
-
     return `<article class="point">
     <form action="" method="get">
       <header class="point__header">
@@ -79,7 +65,7 @@ export class eventItemEdit {
         </div>
 
         <div class="point__destination-wrap">
-          <label class="point__destination-label" for="destination">Flight to</label>
+          <label class="point__destination-label" for="destination">${this._type.typeName} to</label>
           <input class="point__destination-input" list="destination-select" id="destination" value="${this._city}" name="destination">
           <datalist id="destination-select">
             <option value="airport"></option>
@@ -132,7 +118,7 @@ export class eventItemEdit {
           </div>
         </section>
         <input type="hidden" class="point__total-price" name="total-price" value="">
-      </section>$
+      </section>
     </form>
   </article>
   `.trim();
@@ -143,7 +129,7 @@ export class eventItemEdit {
     for (let item of offers) {
       const nameId = item[0].toLowerCase().replace(/ /g, `-`);
       htmlBtnOffer +=
-      `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}">
+        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}">
       <label for="${nameId}" class="point__offers-label">
         <span class="point__offer-service">${item[0]}</span> + €<span class="point__offer-price">${item[1]}</span>
       </label>`;
@@ -156,23 +142,17 @@ export class eventItemEdit {
   }
 
   render() {
-    this._element = createElement(this.template);
     this.bind();
     return this._element;
   }
 
-  unrender() {
-    this.unbind();
-    this._element = null;
-  }
-
   bind() {
     this._element.querySelector(`.point__button--save`)
-        .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
   }
 
   unbind() {
-    // Удаление обработчиков
+    this._element.querySelector(`.point__button--save`)
+      .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
   }
-
-};
+}
