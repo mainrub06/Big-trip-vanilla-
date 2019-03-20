@@ -18,7 +18,9 @@ export class EventItem {
   }
 
   _onEditButtonClick() {
-    typeof this._onEdit === (`function` && this._onEdit());
+    if (typeof this._onEdit === `function`) {
+      this._onEdit();
+    }
   }
 
   set onEdit(fn) {
@@ -65,5 +67,9 @@ export class EventItem {
   render() {
     this.bind();
     return this._element;
+  }
+
+  unrender() {
+    this.unbind();
   }
 }

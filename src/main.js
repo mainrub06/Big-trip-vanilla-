@@ -59,12 +59,12 @@ eventsArr.forEach((item) => {
   point.onEdit = () => {
     pointEdit.render();
     pointsBlock.replaceChild(pointEdit.element, point.element);
-    point.unbind();
+    point.unrender();
   };
 
   pointEdit.onSubmit = () => {
     point.render();
     pointsBlock.replaceChild(point.element, pointEdit.element);
-    pointEdit.unbind();
+    pointEdit.unrender();
   };
 });

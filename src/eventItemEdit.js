@@ -9,16 +9,19 @@ export class EventItemEdit {
     this._price = data.price;
     this._offers = data.offers;
     this._description = data.description;
+
     this._element = createElement(this.template).firstElementChild;
     this._state = {
       // Состояние компонента
     };
-    this._onEdit = null;
+    this._onSubmit = null;
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
-    typeof this._onSubmit === `function` && this._onSubmit();
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit();
+    }
   }
 
   set onSubmit(fn) {
@@ -147,12 +150,16 @@ export class EventItemEdit {
   }
 
   bind() {
-    this._element.querySelector(`.point__button--save`)
+    this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
   }
 
   unbind() {
-    this._element.querySelector(`.point__button--save`)
+    this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+  }
+
+  unrender() {
+    this.unbind();
   }
 }
