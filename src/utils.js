@@ -23,3 +23,9 @@ export const getRandomArray = (arr, num) => {
   const newArray = shuffle(arr);
   return newArray.slice(0, num);
 };
+
+export const createElement = function (element) {
+  const point = document.createElement(`template`);
+  point.innerHTML = element;
+  return point.content;
+};

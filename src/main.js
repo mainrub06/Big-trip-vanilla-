@@ -1,7 +1,9 @@
 import filterTemplate from '../src/filter.js';
 import {makePoint} from '../src/point.js';
 import {FILTERS_ARRAY, makeRandomEvent} from '../src/data.js';
-import {random} from "../src/utils.js";
+import {random} from '../src/utils.js';
+import {EventItem} from '../src/eventItem.js';
+import {EventItemEdit} from '../src/eventItemEdit.js';
 
 const filtersBlock = document.querySelector(`.trip-filter`);
 const pointsBlock = document.querySelector(`.trip-day__items`);
@@ -49,7 +51,20 @@ for (let i = 0; i < 7; i++) {
 }
 
 eventsArr.forEach((item) => {
-  renderPoints(item);
+  const point = new EventItem(item);
+  const pointEdit = new EventItemEdit(item);
+  point.render();
+  pointsBlock.appendChild(point.element);
+
+  point.onEdit = () => {
+    pointEdit.render();
+    pointsBlock.replaceChild(pointEdit.element, point.element);
+    point.unrender();
+  };
+
+  pointEdit.onSubmit = () => {
+    point.render();
+    pointsBlock.replaceChild(point.element, pointEdit.element);
+    pointEdit.unrender();
+  };
 });
-
-
