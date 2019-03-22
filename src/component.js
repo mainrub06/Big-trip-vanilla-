@@ -16,12 +16,7 @@ export class Component {
     throw new Error(`You have to define template.`);
   }
 
-  render() {
-    this.bind();
-    return this._element;
-  }
+  render() {}
 
-  unrender() {
-    this.unbind();
-  }
+  unrender() {}
 }

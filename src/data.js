@@ -85,8 +85,3 @@ export const makeRandomEvent = () => ({
   offers: getRandomArray(DATA_POINTS.OFFERS, 2),
   description: getRandomDescription(DATA_POINTS.DESCRIPTION_TEXT)
 });
-
-
-// eventItem.js
-
-
