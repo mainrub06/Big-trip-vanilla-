@@ -1,7 +1,9 @@
 import {createElement} from "../src/utils.js";
+import {Component} from "../src/component.js";
 
-export class EventItem {
+export class EventItem extends Component {
   constructor(data) {
+    super();
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
@@ -62,14 +64,5 @@ export class EventItem {
 
   get element() {
     return this._element;
-  }
-
-  render() {
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
   }
 }
