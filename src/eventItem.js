@@ -65,13 +65,4 @@ export class EventItem extends Component {
   get element() {
     return this._element;
   }
-
-  render() {
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-  }
 }

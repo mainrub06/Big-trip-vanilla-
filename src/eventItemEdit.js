@@ -155,13 +155,4 @@ export class EventItemEdit extends Component {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
   }
-
-  render() {
-    this.bind();
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-  }
 }
