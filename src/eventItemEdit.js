@@ -1,7 +1,9 @@
 import {createElement} from "../src/utils.js";
+import {Component} from "../src/component.js";
 
-export class EventItemEdit {
+export class EventItemEdit extends Component {
   constructor(data) {
+    super();
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
@@ -144,11 +146,6 @@ export class EventItemEdit {
     return this._element;
   }
 
-  render() {
-    this.bind();
-    return this._element;
-  }
-
   bind() {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
@@ -157,9 +154,5 @@ export class EventItemEdit {
   unbind() {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-  }
-
-  unrender() {
-    this.unbind();
   }
 }
