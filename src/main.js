@@ -1,5 +1,4 @@
 import filterTemplate from '../src/filter.js';
-import {makePoint} from '../src/point.js';
 import {FILTERS_ARRAY, makeRandomEvent} from '../src/data.js';
 import {random} from '../src/utils.js';
 import {EventItem} from '../src/eventItem.js';
@@ -14,16 +13,16 @@ const renderFilters = function (element) {
   filtersBlock.appendChild(filter.content);
 };
 
-const renderPoints = function (element) {
-  const point = document.createElement(`template`);
-  point.innerHTML = makePoint(element);
-  pointsBlock.appendChild(point.content);
-};
-
 const removeFilters = () => {
   let filters = document.querySelectorAll(`.trip-point`);
+  let filtersEdit = document.querySelectorAll(`.point`);
   if (filters) {
     filters.forEach(function (item) {
+      item.remove();
+    });
+  }
+  if (filtersEdit) {
+    filtersEdit.forEach(function (item) {
       item.remove();
     });
   }
@@ -32,7 +31,7 @@ const removeFilters = () => {
 const renderRandomPoints = (num, array) => {
   removeFilters();
   for (let i = 0; i < random(0, num); i++) {
-    renderPoints(array[i]);
+    renderPointItem(array[i]);
   }
 };
 
@@ -50,7 +49,7 @@ for (let i = 0; i < 7; i++) {
   eventsArr.push(makeRandomEvent());
 }
 
-eventsArr.forEach((item) => {
+const renderPointItem = (item) => {
   const point = new EventItem(item);
   const pointEdit = new EventItemEdit(item);
   point.render();
@@ -67,4 +66,8 @@ eventsArr.forEach((item) => {
     pointsBlock.replaceChild(point.element, pointEdit.element);
     pointEdit.unrender();
   };
+};
+
+eventsArr.forEach((item) => {
+  renderPointItem(item);
 });
