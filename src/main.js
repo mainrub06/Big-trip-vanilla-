@@ -28,6 +28,7 @@ const removeFilters = () => {
   }
 };
 
+
 const renderRandomPoints = (num, array) => {
   removeFilters();
   for (let i = 0; i < random(0, num); i++) {

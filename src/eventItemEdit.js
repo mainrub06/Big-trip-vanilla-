@@ -1,5 +1,11 @@
-import {createElement} from "../src/utils.js";
-import {Component} from "../src/component.js";
+import {
+  createElement
+} from "../src/utils.js";
+import {
+  Component
+} from "../src/component.js";
+import flatpickr from "flatpickr";
+import moment from "moment";
 
 export class EventItemEdit extends Component {
   constructor(data) {
@@ -13,16 +19,31 @@ export class EventItemEdit extends Component {
     this._description = data.description;
 
     this._element = createElement(this.template).firstElementChild;
-    this._state = {
-      // Состояние компонента
-    };
     this._onSubmit = null;
+    this._onDelete = null;
+  }
+
+  update(data) {
+    this._type = data.type;
+    this._city = data.city;
+    this._time = data.time;
+    this._price = data.price;
   }
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
     if (typeof this._onSubmit === `function`) {
       this._onSubmit();
+    }
+  }
+
+  _onChangeWay(evt) {
+    evt.preventDefault();
+    const way = evt.target.innerHTML.split(` `);
+    if (this._type.icon !== way[0]) {
+      return way[0];
+    } else {
+      return this._type.icon;
     }
   }
 
@@ -149,10 +170,23 @@ export class EventItemEdit extends Component {
   bind() {
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.travel-way__select-group`).addEventListener(`click`, this._onChangeWay.bind(this));
   }
 
   unbind() {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeWay.bind(this));
   }
+
+  static createMapper(target) {
+    return {
+      hashtag: (value) => target.tags.add(value),
+      text: (value) => target.title = value,
+      color: (value) => target.color = value,
+      repeat: (value) => target.repeatingDays[value] = true,
+      date: (value) => target.dueDate = value,
+    }
+  }
+
 }
