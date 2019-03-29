@@ -65,4 +65,12 @@ export class EventItem extends Component {
   get element() {
     return this._element;
   }
+
+  update(data) {
+    this._type = data.type;
+    this._city = data.city;
+    this._time = data.time;
+    this._price = data.price;
+    this._offers = data.offers;
+  }
 }

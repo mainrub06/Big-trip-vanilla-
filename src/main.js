@@ -62,7 +62,20 @@ const renderPointItem = (item) => {
     point.unrender();
   };
 
-  pointEdit.onSubmit = () => {
+  pointEdit.onSubmit = (newData) => {
+    item.type = newData.type;
+    item.city = newData.city;
+    item.offers = newData.offers;
+    item.price = newData.price;
+    item.time = newData.time;
+
+    point.update(item);
+    point.render();
+    pointsBlock.replaceChild(point.element, pointEdit.element);
+    pointEdit.unrender();
+  };
+
+  pointEdit.onDelete = () => {
     point.render();
     pointsBlock.replaceChild(point.element, pointEdit.element);
     pointEdit.unrender();

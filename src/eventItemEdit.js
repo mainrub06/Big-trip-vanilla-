@@ -18,9 +18,46 @@ export class EventItemEdit extends Component {
     this._offers = data.offers;
     this._description = data.description;
 
-    this._element = createElement(this.template).firstElementChild;
+    this._element = null;
+
+
     this._onSubmit = null;
     this._onDelete = null;
+  }
+
+  _onChangePrice(e) {
+    this._price = e.target.value;
+  }
+
+  _onChangeTimeStart() {
+    const valueInput = this._element.querySelector(`.point__time-start`).value;
+    this._timeline[0] = new Date(moment(valueInput, `h:mm`)).getTime();
+  }
+
+  _onChangeTimeEnd() {
+    const valueInput = this._element.querySelector(`.point__time-end`).value;
+    this._timeline[1] = new Date(moment(valueInput, `h:mm`)).getTime();
+  }
+
+  _processForm(formData) {
+    const entry = {
+      type: this._type,
+      offers: new Set(),
+      time: [],
+      price: null,
+      duration: new Date(),
+      city: ``,
+      totalPrice: 0,
+    };
+
+    const pointMapper = EventItemEdit.createMapper(entry);
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      if (pointMapper[property]) {
+        pointMapper[property](value);
+      }
+    }
+    return entry;
   }
 
   update(data) {
@@ -32,9 +69,13 @@ export class EventItemEdit extends Component {
 
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
+    const formData = new FormData(this._element.querySelector(`form`));
+    const newData = this._processForm(formData);
     if (typeof this._onSubmit === `function`) {
-      this._onSubmit();
+      this._onSubmit(newData);
     }
+
+    this.update(newData);
   }
 
   _onChangeWay(evt) {
@@ -49,6 +90,33 @@ export class EventItemEdit extends Component {
 
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+
+  static createMapper(target) {
+    return {
+      offer(value) {
+        const result = value.split(`-`);
+        target.offers.add([result[0], result[1]]);
+      },
+      destination(value) {
+        target.city = value;
+      },
+      price(value) {
+        target.price = value;
+      },
+      [`travel-way`](value) {
+        target.type = {
+          icon: DATA_POINTS.POINTS_TYPE[value],
+          typeName: value,
+        };
+      },
+      [`time-start`](value) {
+        target.timeline[0] = new Date(moment(value, `h:mm`)).getTime();
+      },
+      [`time-end`](value) {
+        target.timeline[1] = new Date(moment(value, `h:mm`)).getTime();
+      },
+    };
   }
 
   get template() {
@@ -103,8 +171,8 @@ export class EventItemEdit extends Component {
 
         <label class="point__time">
           choose time
-          <input class="point__input" type="text" value="${this._time[0]} — ${this._time[1]}" name="time" placeholder="${this._time[0]} — ${this._time[1]}">
-        </label>
+          <input class="point__input point__time-start" type="text" value="${this._time[0]}" name="time-start" placeholder="${this._time[0]}">
+          <input class="point__input point__time-end" type="text" value="${this._time[1]}" name="time-end" placeholder="${this._time[1]}">        </label>
 
         <label class="point__price">
           write price
@@ -167,26 +235,52 @@ export class EventItemEdit extends Component {
     return this._element;
   }
 
+  _onDeleteBtnClick() {
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
+    }
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   bind() {
+
+    this._element = createElement(this.template).firstElementChild;
+
+
     this._element.querySelector(`.point form`)
       .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
     this._element.querySelector(`.travel-way__select-group`).addEventListener(`click`, this._onChangeWay.bind(this));
+    this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick.bind(this));
+    flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
+      enableTime: true,
+      altInput: true,
+      noCalendar: true,
+      defaultDate: [this._time[0]],
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`,
+      onClose: this._onChangeTimeStart,
+    });
+
+    flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`), {
+      enableTime: true,
+      altInput: true,
+      noCalendar: true,
+      defaultDate: [this._time[1]],
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`,
+      onClose: this._onChangeTimeEnd,
+    });
   }
 
   unbind() {
     this._element.querySelector(`.point form`)
       .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
     this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeWay.bind(this));
+    this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
+    flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).unrender();
+    flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).unrender();
   }
-
-  static createMapper(target) {
-    return {
-      hashtag: (value) => target.tags.add(value),
-      text: (value) => target.title = value,
-      color: (value) => target.color = value,
-      repeat: (value) => target.repeatingDays[value] = true,
-      date: (value) => target.dueDate = value,
-    }
-  }
-
 }
