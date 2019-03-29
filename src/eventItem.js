@@ -12,7 +12,7 @@ export class EventItem extends Component {
     this._offers = data.offers;
     this._description = data.description;
 
-    this._element = createElement(this.template).firstElementChild;
+    this._element = null;
     this._state = {
       // Состояние компонента
     };
@@ -53,6 +53,8 @@ export class EventItem extends Component {
   }
 
   bind() {
+    this._element = createElement(this.template).firstElementChild;
+
     this._element.querySelector(`.trip-icon`)
       .addEventListener(`click`, this._onEditButtonClick.bind(this));
   }

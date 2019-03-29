@@ -67,7 +67,7 @@ const renderPointItem = (item) => {
     item.city = newData.city;
     item.offers = newData.offers;
     item.price = newData.price;
-    item.time = newData.time;
+    // item.time = newData.time;
 
     point.update(item);
     point.render();

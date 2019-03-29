@@ -6,6 +6,7 @@ import {
 } from "../src/component.js";
 import flatpickr from "flatpickr";
 import moment from "moment";
+import {DATA_POINTS} from "../src/data.js";
 
 export class EventItemEdit extends Component {
   constructor(data) {
@@ -19,8 +20,6 @@ export class EventItemEdit extends Component {
     this._description = data.description;
 
     this._element = null;
-
-
     this._onSubmit = null;
     this._onDelete = null;
   }
@@ -78,18 +77,101 @@ export class EventItemEdit extends Component {
     this.update(newData);
   }
 
-  _onChangeWay(evt) {
-    evt.preventDefault();
-    const way = evt.target.innerHTML.split(` `);
-    if (this._type.icon !== way[0]) {
-      return way[0];
-    } else {
-      return this._type.icon;
+  makeOffer(offers) {
+    let htmlBtnOffer = ``;
+    for (let item of offers) {
+      const nameId = item[0].toLowerCase().replace(/ /g, `-`);
+      htmlBtnOffer +=
+        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}">
+      <label for="${nameId}" class="point__offers-label">
+        <span class="point__offer-service">${item[0]}</span> + €<span class="point__offer-price">${item[1]}</span>
+      </label>`;
     }
+    return htmlBtnOffer;
+  }
+
+  get element() {
+    return this._element;
   }
 
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+
+  _onDeleteBtnClick() {
+    if (typeof this._onDelete === `function`) {
+      this._onDelete();
+    }
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
+  bind() {
+    if (this._element) {
+      this._element.querySelector(`.point form`)
+        .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+      this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType.bind(this));
+      this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick.bind(this));
+      // flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
+      //   enableTime: true,
+      //   altInput: true,
+      //   noCalendar: true,
+      //   defaultDate: [this._time[0]],
+      //   altFormat: `h:i K`,
+      //   dateFormat: `h:i K`,
+      //   onClose: this._onChangeTimeStart,
+      // });
+
+      // flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`), {
+      //   enableTime: true,
+      //   altInput: true,
+      //   noCalendar: true,
+      //   defaultDate: [this._time[1]],
+      //   altFormat: `h:i K`,
+      //   dateFormat: `h:i K`,
+      //   onClose: this._onChangeTimeEnd,
+      // });
+    }
+  }
+
+  unbind() {
+    if (this._element) {
+      this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+      this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeType.bind(this));
+      this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
+      // flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).unrender();
+      // flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).unrender();
+    }
+  }
+
+  render() {
+    this._element = createElement(this.template).firstElementChild;
+    this.bind();
+
+    return this._element;
+  }
+
+  unrender() {
+    this.unbind();
+    this._element = null;
+  }
+
+  _onChangeType(e) {
+    if (e.target.tagName.toLowerCase() === `input`) {
+      let value = e.target.value;
+      this._type = {typeName: value, icon: DATA_POINTS.POINTS_TYPE[value]};
+      this._partialUpdate();
+    }
+  }
+
+  _partialUpdate() {
+    this.unbind();
+    const oldElem = this._element;
+    this._element.parentNode.replaceChild(this.render(), oldElem);
+    oldElem.remove();
+    this.bind();
   }
 
   static createMapper(target) {
@@ -105,16 +187,17 @@ export class EventItemEdit extends Component {
         target.price = value;
       },
       [`travel-way`](value) {
+        const result = value.split(` `);
         target.type = {
-          icon: DATA_POINTS.POINTS_TYPE[value],
-          typeName: value,
+          typeName: result[1],
+          icon: result[0]
         };
       },
       [`time-start`](value) {
-        target.timeline[0] = new Date(moment(value, `h:mm`)).getTime();
+        target.time[0] = new Date(moment(value, `h:mm`)).getTime();
       },
       [`time-end`](value) {
-        target.timeline[1] = new Date(moment(value, `h:mm`)).getTime();
+        target.time[1] = new Date(moment(value, `h:mm`)).getTime();
       },
     };
   }
@@ -216,71 +299,5 @@ export class EventItemEdit extends Component {
     </form>
   </article>
   `.trim();
-  }
-
-  makeOffer(offers) {
-    let htmlBtnOffer = ``;
-    for (let item of offers) {
-      const nameId = item[0].toLowerCase().replace(/ /g, `-`);
-      htmlBtnOffer +=
-        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}">
-      <label for="${nameId}" class="point__offers-label">
-        <span class="point__offer-service">${item[0]}</span> + €<span class="point__offer-price">${item[1]}</span>
-      </label>`;
-    }
-    return htmlBtnOffer;
-  }
-
-  get element() {
-    return this._element;
-  }
-
-  _onDeleteBtnClick() {
-    if (typeof this._onDelete === `function`) {
-      this._onDelete();
-    }
-  }
-
-  set onDelete(fn) {
-    this._onDelete = fn;
-  }
-
-  bind() {
-
-    this._element = createElement(this.template).firstElementChild;
-
-
-    this._element.querySelector(`.point form`)
-      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-    this._element.querySelector(`.travel-way__select-group`).addEventListener(`click`, this._onChangeWay.bind(this));
-    this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick.bind(this));
-    flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
-      enableTime: true,
-      altInput: true,
-      noCalendar: true,
-      defaultDate: [this._time[0]],
-      altFormat: `h:i K`,
-      dateFormat: `h:i K`,
-      onClose: this._onChangeTimeStart,
-    });
-
-    flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`), {
-      enableTime: true,
-      altInput: true,
-      noCalendar: true,
-      defaultDate: [this._time[1]],
-      altFormat: `h:i K`,
-      dateFormat: `h:i K`,
-      onClose: this._onChangeTimeEnd,
-    });
-  }
-
-  unbind() {
-    this._element.querySelector(`.point form`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-    this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeWay.bind(this));
-    this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
-    flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).unrender();
-    flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).unrender();
   }
 }
