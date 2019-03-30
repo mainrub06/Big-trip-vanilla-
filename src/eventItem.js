@@ -55,13 +55,11 @@ export class EventItem extends Component {
   bind() {
     this._element = createElement(this.template).firstElementChild;
 
-    this._element.querySelector(`.trip-icon`)
-      .addEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
   unbind() {
-    this._element.querySelector(`.trip-icon`)
-      .removeEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.removeEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
   get element() {
