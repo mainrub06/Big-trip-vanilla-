@@ -3,7 +3,9 @@ import {
 } from "../src/component.js";
 import flatpickr from "flatpickr";
 import moment from "moment";
-import {DATA_POINTS} from "../src/data.js";
+import {
+  DATA_POINTS
+} from "../src/data.js";
 
 export class EventItemEdit extends Component {
   constructor(data) {
@@ -31,12 +33,12 @@ export class EventItemEdit extends Component {
 
   _onChangeTimeStart() {
     const valueInput = this._element.querySelector(`.point__time-start`).value;
-    this._time[0] = new Date(moment(valueInput, `h:mm`)).getTime();
+    this._time[0] = new Date(moment(valueInput, `h:mm`));
   }
 
   _onChangeTimeEnd() {
     const valueInput = this._element.querySelector(`.point__time-end`).value;
-    this._time[1] = moment(valueInput, `h:mm`);
+    this._time[1] = new Date(moment(valueInput, `h:mm`));
   }
 
   _processForm(formData) {
@@ -45,7 +47,6 @@ export class EventItemEdit extends Component {
       offers: new Set(),
       time: [],
       price: null,
-      duration: new Date(),
       city: ``,
       totalPrice: 0,
     };
@@ -81,11 +82,11 @@ export class EventItemEdit extends Component {
   makeOffer(offers) {
     let htmlBtnOffer = ``;
     for (let item of offers) {
-      const nameId = item[0].toLowerCase().replace(/ /g, `-`);
+      const nameId = item.name.toLowerCase().replace(/ /g, `-`);
       htmlBtnOffer +=
-        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}">
+        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}" ${item.checked ? `checked` : ``}>
       <label for="${nameId}" class="point__offers-label">
-        <span class="point__offer-service">${item[0]}</span> + €<span class="point__offer-price">${item[1]}</span>
+        <span class="point__offer-service">${item.name}</span> + €<span class="point__offer-price">${item.price}</span>
       </label>`;
     }
     return htmlBtnOffer;
@@ -110,49 +111,51 @@ export class EventItemEdit extends Component {
   }
 
   bind() {
-    if (this._element) {
-      this._element.querySelector(`.point form`)
-        .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-      this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType.bind(this));
-      this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick.bind(this));
-      flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
-        enableTime: true,
-        altInput: true,
-        noCalendar: true,
-        defaultDate: [this._time[0]],
-        altFormat: `h:i K`,
-        dateFormat: `h:i K`,
-        onClose: this._onChangeTimeStart,
-      });
+    this._element.querySelector(`.point form`)
+      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType.bind(this));
+    this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick.bind(this));
+    flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
+      enableTime: true,
+      altInput: true,
+      noCalendar: true,
+      defaultDate: [this._time[0]],
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`,
+      onClose: this._onChangeTimeStart,
+    });
 
-      flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`), {
-        enableTime: true,
-        altInput: true,
-        noCalendar: true,
-        defaultDate: [this._time[1]],
-        altFormat: `h:i K`,
-        dateFormat: `h:i K`,
-        onClose: this._onChangeTimeEnd,
-      });
-    }
+    flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`), {
+      enableTime: true,
+      altInput: true,
+      noCalendar: true,
+      defaultDate: [this._time[1]],
+      altFormat: `h:i K`,
+      dateFormat: `h:i K`,
+      onClose: this._onChangeTimeEnd,
+    });
+
+
+    this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._isCheckedOffer.bind(this));
   }
 
   unbind() {
-    if (this._element) {
-      this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-      this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeType.bind(this));
-      this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
-      // flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).unrender();
-      // flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).unrender();
-      this._element.querySelector(`.point__time input[name="time-start"]`).removeEventListener(`click`, this._onChangeTimeStart);
-      this._element.querySelector(`.point__time input[name="time-end"]`).removeEventListener(`click`, this._onChangeTimeEnd);
-    }
+    this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
+    this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeType.bind(this));
+    this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
+    flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).destroy();
+    flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).destroy();
+
+    this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._isCheckedOffer.bind(this));
   }
 
   _onChangeType(e) {
     if (e.target.tagName.toLowerCase() === `input`) {
       let value = e.target.value;
-      this._type = {typeName: value, icon: DATA_POINTS.POINTS_TYPE[value]};
+      this._type = {
+        typeName: value,
+        icon: DATA_POINTS.POINTS_TYPE[value]
+      };
       this._partialUpdate();
     }
   }
@@ -165,11 +168,23 @@ export class EventItemEdit extends Component {
     this.bind();
   }
 
+  _isCheckedOffer(e) {
+    const checkbox = e.target;
+    let isChecked = checkbox.checked;
+    this._offers[0].checked = isChecked;
+    console.log(isChecked);
+  }
+
+  // вывод - нужно каждому офферу в любом случае давать идентификатор
+
   static createMapper(target) {
     return {
       offer(value) {
-        const result = value.split(`-`);
-        target.offers.add([result[0], result[1]]);
+        const result = value.toLowerCase().replace(`-`, ` `);
+        target.offers.add({
+          name: result,
+          price: 2
+        });
       },
       destination(value) {
         target.city = value;
@@ -184,16 +199,16 @@ export class EventItemEdit extends Component {
         };
       },
       [`time-start`](value) {
-        target.time[0] = new Date(moment(value, `h:mm`)).getTime();
+        target.time[0] = new Date(moment(value, `h:mm`));
       },
       [`time-end`](value) {
-        target.time[1] = new Date(moment(value, `h:mm`)).getTime();
+        target.time[1] = new Date(moment(value, `h:mm`));
       },
     };
   }
 
   get template() {
-    return /* html*/`<article class="point">
+    return /* html*/ `<article class="point">
     <form action="" method="get">
       <header class="point__header">
         <label class="point__date">

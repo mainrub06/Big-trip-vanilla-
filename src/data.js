@@ -38,7 +38,26 @@ export const DATA_POINTS = {
     'restaurant': `🍴`,
   },
   CITIES: [`Moscow`, `Monterrey`, `Washington`, `Paris`, `London`, `Frankfurt`, `Florence`, `Rom`, `Velington`],
-  OFFERS: [[`Add luggage`, random(5, 100)], [`Switch to comfort class`, random(5, 100)], [`Add meal`, random(5, 100)], [`Choose seats`, random(5, 100)]],
+  OFFERS: [{
+    name: `Add luggage`,
+    price: random(5, 100),
+    checked: true
+  } ,
+  {
+    name: `Switch to comfort class`,
+    price: random(5, 100),
+    checked: true
+  },
+  {
+    name: `Add meal`,
+    price: random(5, 100),
+    checked: true
+  },
+  {
+    name: `Choose seats`,
+    price: random(5, 100),
+    checked: true
+  }],
   DESCRIPTION_TEXT: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
 };
 

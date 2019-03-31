@@ -53,7 +53,7 @@ export class EventItem extends Component {
   makeOffer(offers) {
     let htmlBtnOffer = ``;
     for (let item of offers) {
-      htmlBtnOffer += `<li><button class="trip-point__offer">${item[0]} + &euro;&nbsp;${item[1]}</button></li>`;
+      htmlBtnOffer += `<li><button class="trip-point__offer">${item.name} + &euro;&nbsp;${item.price}</button></li>`;
     }
     return htmlBtnOffer;
   }
@@ -73,8 +73,6 @@ export class EventItem extends Component {
   }
 
   bind() {
-    this._element = createElement(this.template).firstElementChild;
-
     this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
   }
 
