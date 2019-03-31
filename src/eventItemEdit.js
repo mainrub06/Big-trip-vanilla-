@@ -1,7 +1,4 @@
 import {
-  createElement
-} from "../src/utils.js";
-import {
   Component
 } from "../src/component.js";
 import flatpickr from "flatpickr";
@@ -19,6 +16,10 @@ export class EventItemEdit extends Component {
     this._offers = data.offers;
     this._description = data.description;
 
+    this._onChangeTimeStart = this._onChangeTimeStart.bind(this);
+    this._onChangeTimeEnd = this._onChangeTimeEnd.bind(this);
+    this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+
     this._element = null;
     this._onSubmit = null;
     this._onDelete = null;
@@ -35,7 +36,7 @@ export class EventItemEdit extends Component {
 
   _onChangeTimeEnd() {
     const valueInput = this._element.querySelector(`.point__time-end`).value;
-    this._time[1] = new Date(moment(valueInput, `h:mm`)).getTime();
+    this._time[1] = moment(valueInput, `h:mm`);
   }
 
   _processForm(formData) {
@@ -148,18 +149,6 @@ export class EventItemEdit extends Component {
     }
   }
 
-  render() {
-    this._element = createElement(this.template).firstElementChild;
-    this.bind();
-
-    return this._element;
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
-  }
-
   _onChangeType(e) {
     if (e.target.tagName.toLowerCase() === `input`) {
       let value = e.target.value;
@@ -204,7 +193,7 @@ export class EventItemEdit extends Component {
   }
 
   get template() {
-    return html`<article class="point">
+    return /* html*/`<article class="point">
     <form action="" method="get">
       <header class="point__header">
         <label class="point__date">
