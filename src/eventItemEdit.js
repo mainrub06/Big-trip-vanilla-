@@ -81,13 +81,14 @@ export class EventItemEdit extends Component {
 
   makeOffer(offers) {
     let htmlBtnOffer = ``;
-    for (let item of offers) {
-      const nameId = item.name.toLowerCase().replace(/ /g, `-`);
+    for (let i = 0; i < offers.length; i++) {
+      const nameId = offers[i].name.toLowerCase().replace(/ /g, `-`);
       htmlBtnOffer +=
-        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}" name="offer" value="${nameId}" ${item.checked ? `checked` : ``}>
-      <label for="${nameId}" class="point__offers-label">
-        <span class="point__offer-service">${item.name}</span> + €<span class="point__offer-price">${item.price}</span>
+        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}-${i}" name="offer" value="${nameId}" ${offers[i].checked ? `checked` : ``}>
+      <label for="${nameId}-${i}" class="point__offers-label">
+        <span class="point__offer-service">${offers[i].name}</span> + €<span class="point__offer-price">${offers[i].price}</span>
       </label>`;
+      this._offers[i].index = i;
     }
     return htmlBtnOffer;
   }
@@ -170,20 +171,25 @@ export class EventItemEdit extends Component {
 
   _isCheckedOffer(e) {
     const checkbox = e.target;
+    let id = checkbox.id.split(`-`);
+    let lastElement = id[id.length - 1];
+    // console.log(lastElement);
     let isChecked = checkbox.checked;
-    this._offers[0].checked = isChecked;
-    console.log(isChecked);
+    // this._offers[lastElement].checked = isChecked;
+    // this._offers[this.index].checked = isChecked;
   }
 
   // вывод - нужно каждому офферу в любом случае давать идентификатор
 
   static createMapper(target) {
     return {
-      offer(value) {
+      offer(value, id) {
         const result = value.toLowerCase().replace(`-`, ` `);
+        let idArr = id.split(`-`);
+        let lastElement = idArr[idArr.length - 1];
         target.offers.add({
           name: result,
-          price: 2
+          price: this._offers[lastElement].price
         });
       },
       destination(value) {

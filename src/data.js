@@ -42,7 +42,7 @@ export const DATA_POINTS = {
     name: `Add luggage`,
     price: random(5, 100),
     checked: true
-  } ,
+  },
   {
     name: `Switch to comfort class`,
     price: random(5, 100),
