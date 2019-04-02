@@ -46,3 +46,7 @@ export const createElement = function (element) {
   point.innerHTML = element;
   return point.content;
 };
+
+export const event = (type, event, element,  ) => {
+
+}

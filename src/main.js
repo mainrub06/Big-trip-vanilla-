@@ -63,8 +63,6 @@ const renderPointItem = (item) => {
   };
 
   pointEdit.onSubmit = (newData) => {
-
-
     point.update(newData);
     pointEdit.update(newData);
     point.render();

@@ -18,9 +18,12 @@ export class EventItemEdit extends Component {
     this._offers = data.offers;
     this._description = data.description;
 
+    this._onChangeType = this._onChangeType.bind(this);
     this._onChangeTimeStart = this._onChangeTimeStart.bind(this);
     this._onChangeTimeEnd = this._onChangeTimeEnd.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
+    this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
+    this._isCheckedOffer = this._isCheckedOffer.bind(this);
 
     this._element = null;
     this._onSubmit = null;
@@ -41,38 +44,9 @@ export class EventItemEdit extends Component {
     this._time[1] = new Date(moment(valueInput, `h:mm`));
   }
 
-  _processForm(formData) {
-    const entry = {
-      type: this._type,
-      offers: new Set(),
-      time: [],
-      price: null,
-      city: ``,
-      totalPrice: 0,
-    };
-
-    const pointMapper = EventItemEdit.createMapper(entry);
-    for (const pair of formData.entries()) {
-
-      const [property, value] = pair;
-      if (pointMapper[property]) {
-        pointMapper[property](value);
-      }
-    }
-    return entry;
-  }
-
-  update(data) {
-    this._type = data.type;
-    this._city = data.city;
-    this._time = data.time;
-    this._price = data.price;
-  }
-
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`form`));
-    console.log(formData);
     const newData = this._processForm(formData);
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
@@ -100,10 +74,11 @@ export class EventItemEdit extends Component {
   }
 
   bind() {
-    this._element.querySelector(`.point form`)
-      .addEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-    this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType.bind(this));
-    this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick.bind(this));
+    this._element.querySelector(`.point form`).addEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType);
+    this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick);
+    this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._isCheckedOffer);
+
     flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
       enableTime: true,
       altInput: true,
@@ -123,19 +98,16 @@ export class EventItemEdit extends Component {
       dateFormat: `h:i K`,
       onClose: this._onChangeTimeEnd,
     });
-
-
-    this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._isCheckedOffer.bind(this));
   }
 
   unbind() {
-    this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onSubmitButtonClick.bind(this));
-    this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeType.bind(this));
+    this._element.querySelector(`.point form`).removeEventListener(`submit`, this._onSubmitButtonClick);
+    this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeType);
     this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
+    this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._isCheckedOffer);
+
     flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).destroy();
     flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).destroy();
-
-    this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._isCheckedOffer.bind(this));
   }
 
   _onChangeType(e) {
@@ -158,26 +130,23 @@ export class EventItemEdit extends Component {
   }
 
   _isCheckedOffer(e) {
-    const checkbox = e.target;
-    let id = checkbox.id.split(`-`);
-    let lastElement = id[id.length - 1];
-    // console.log(lastElement);
-    let isChecked = checkbox.checked;
+    const checkbox = e.target.id;
+    // let id = checkbox.id.split(`-`);
+    // let lastElement = id[id.length - 1];
+    // console.log(console.log(checkbox));
+    // let isChecked = checkbox.checked;
     // this._offers[lastElement].checked = isChecked;
     // this._offers[this.index].checked = isChecked;
   }
 
-  // вывод - нужно каждому офферу в любом случае давать идентификатор
-
   static createMapper(target) {
     return {
       offer(value) {
-        const result = value.toLowerCase().replace(`-`, ` `);
+        const result = value.slice(0, -2).toLowerCase().replace(`-`, ` `);
         const getIdOffer = value.split(`-`).slice(-1)[0];
-        console.log(getIdOffer);
         target.offers.add({
           name: result,
-          price: this._offers[0].price
+          price: `????`
         });
       },
       destination(value) {
@@ -199,6 +168,38 @@ export class EventItemEdit extends Component {
         target.time[1] = new Date(moment(value, `h:mm`));
       },
     };
+  }
+
+  _processForm(formData) {
+    const entry = {
+      type: this._type,
+      offers: new Set(),
+      time: [],
+      price: null,
+      city: ``,
+      totalPrice: 0,
+    };
+    const offerArray = this._offers;
+
+    console.log(this._offers[0]);
+
+    const pointMapper = EventItemEdit.createMapper.call(this, entry, offerArray);
+    // const pointMapper = EventItemEdit.createMapper(entry);
+    for (const pair of formData.entries()) {
+
+      const [property, value] = pair;
+      if (pointMapper[property]) {
+        pointMapper[property](value);
+      }
+    }
+    return entry;
+  }
+
+  update(data) {
+    this._type = data.type;
+    this._city = data.city;
+    this._time = data.time;
+    this._price = data.price;
   }
 
   makeOffer(offers) {
