@@ -23,7 +23,6 @@ export class EventItemEdit extends Component {
     this._onChangeTimeEnd = this._onChangeTimeEnd.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
-    this._isCheckedOffer = this._isCheckedOffer.bind(this);
 
     this._element = null;
     this._onSubmit = null;
@@ -129,25 +128,10 @@ export class EventItemEdit extends Component {
     this.bind();
   }
 
-  _isCheckedOffer(e) {
-    const checkbox = e.target.id;
-    // let id = checkbox.id.split(`-`);
-    // let lastElement = id[id.length - 1];
-    // console.log(console.log(checkbox));
-    // let isChecked = checkbox.checked;
-    // this._offers[lastElement].checked = isChecked;
-    // this._offers[this.index].checked = isChecked;
-  }
-
   static createMapper(target) {
     return {
-      offer(value) {
-        const result = value.slice(0, -2).toLowerCase().replace(`-`, ` `);
-        const getIdOffer = value.split(`-`).slice(-1)[0];
-        target.offers.add({
-          name: result,
-          price: `????`
-        });
+      offer(index) {
+        target.offers[index].checked = true;
       },
       destination(value) {
         target.city = value;
@@ -171,22 +155,25 @@ export class EventItemEdit extends Component {
   }
 
   _processForm(formData) {
+    const offersArray = this._offers.map((offer) => {
+      return {
+        name: offer.name,
+        price: offer.price,
+        checked: false
+      };
+    });
+
     const entry = {
       type: this._type,
-      offers: new Set(),
+      offers: offersArray,
       time: [],
       price: null,
       city: ``,
       totalPrice: 0,
     };
-    const offerArray = this._offers;
 
-    console.log(this._offers[0]);
-
-    const pointMapper = EventItemEdit.createMapper.call(this, entry, offerArray);
-    // const pointMapper = EventItemEdit.createMapper(entry);
+    const pointMapper = EventItemEdit.createMapper.call(this, entry);
     for (const pair of formData.entries()) {
-
       const [property, value] = pair;
       if (pointMapper[property]) {
         pointMapper[property](value);
@@ -200,20 +187,17 @@ export class EventItemEdit extends Component {
     this._city = data.city;
     this._time = data.time;
     this._price = data.price;
+    this._offers = data.offers;
   }
 
   makeOffer(offers) {
-    let htmlBtnOffer = ``;
-    for (let i = 0; i < offers.length; i++) {
-      const nameId = offers[i].name.toLowerCase().replace(/ /g, `-`);
-      htmlBtnOffer +=
-        `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}-${i}" name="offer" value="${nameId}-${i}" ${offers[i].checked ? `checked` : ``}>
+    return offers.map((offer, i) => {
+      const nameId = offer.name.toLowerCase().replace(/ /g, `-`);
+      return `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}-${i}" name="offer" value="${i}" ${offer.checked ? `checked` : ``}>
       <label for="${nameId}-${i}" class="point__offers-label">
-        <span class="point__offer-service">${offers[i].name}</span> + €<span class="point__offer-price">${offers[i].price}</span>
+        <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
       </label>`;
-      this._offers[i].index = i;
-    }
-    return htmlBtnOffer;
+    }).join(``);
   }
 
   get template() {

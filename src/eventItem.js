@@ -1,7 +1,4 @@
-import {
-  createElement,
-  getClearDuration
-} from "../src/utils.js";
+import {getClearDuration} from "../src/utils.js";
 import {
   Component
 } from "../src/component.js";
@@ -53,6 +50,9 @@ export class EventItem extends Component {
   makeOffer(offers) {
     let htmlBtnOffer = ``;
     for (let item of offers) {
+      if (!item.checked) {
+        continue;
+      }
       htmlBtnOffer += `<li><button class="trip-point__offer">${item.name} + &euro;&nbsp;${item.price}</button></li>`;
     }
     return htmlBtnOffer;
@@ -68,7 +68,6 @@ export class EventItem extends Component {
     let timeIn = moment(timeStart).format(`hh:mm`).split(`:`);
     let timeOut = moment(timeEnd).format(`hh:mm`).split(`:`);
     let duration = getClearDuration(timeIn, timeOut);
-
     return `${duration.hours}h ${duration.minutes}m`;
   }
 

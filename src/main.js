@@ -72,7 +72,7 @@ const renderPointItem = (item) => {
 
   pointEdit.onDelete = () => {
     pointEdit.unrender();
-    pointsBlock.remove(this);
+    pointsBlock.remove();
   };
 };
 
