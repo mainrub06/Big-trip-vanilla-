@@ -6,6 +6,23 @@ export const random = (min, max) => {
 
 export const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
+export const getClearDuration = (timeStart, timeEnd) => {
+  const HOURS_IN_DAY = 12;
+  const MINUTES_IN_HOUR = 60;
+  let hoursDuration = timeEnd[0] - timeStart[0];
+  let minutesDuration = timeEnd[1] - timeStart[1];
+  if (hoursDuration < 0) {
+    hoursDuration = +HOURS_IN_DAY;
+  }
+  if (minutesDuration < 0) {
+    minutesDuration = +MINUTES_IN_HOUR;
+  }
+
+  return {
+    hours: hoursDuration,
+    minutes: minutesDuration
+  };
+};
 
 const shuffle = (arr) => {
   let j;

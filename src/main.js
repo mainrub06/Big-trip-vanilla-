@@ -28,6 +28,7 @@ const removeFilters = () => {
   }
 };
 
+
 const renderRandomPoints = (num, array) => {
   removeFilters();
   for (let i = 0; i < random(0, num); i++) {
@@ -61,10 +62,17 @@ const renderPointItem = (item) => {
     point.unrender();
   };
 
-  pointEdit.onSubmit = () => {
+  pointEdit.onSubmit = (newData) => {
+    point.update(newData);
+    pointEdit.update(newData);
     point.render();
     pointsBlock.replaceChild(point.element, pointEdit.element);
     pointEdit.unrender();
+  };
+
+  pointEdit.onDelete = () => {
+    pointEdit.unrender();
+    pointsBlock.remove();
   };
 };
 

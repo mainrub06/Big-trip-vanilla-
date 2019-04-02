@@ -1,3 +1,7 @@
+import {
+  createElement
+} from "../src/utils.js";
+
 export class Component {
   constructor() {
     if (new.target === Component) {
@@ -21,11 +25,13 @@ export class Component {
   unbind() {}
 
   render() {
+    this._element = createElement(this.template).firstElementChild;
     this.bind();
     return this._element;
   }
 
   unrender() {
     this.unbind();
+    this._element = null;
   }
 }
