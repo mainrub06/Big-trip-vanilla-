@@ -46,3 +46,9 @@ export const createElement = function (element) {
   point.innerHTML = element;
   return point.content;
 };
+
+export const deletePoint = (points, point) => {
+  const index = points.findIndex((it) => it === point);
+  points.splice(index, 1);
+  return points;
+};

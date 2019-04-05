@@ -62,8 +62,9 @@ export class EventItemEdit extends Component {
     this._onSubmit = fn;
   }
 
-  _onDeleteBtnClick() {
+  _onDeleteBtnClick(e) {
     if (typeof this._onDelete === `function`) {
+      e.preventDefault();
       this._onDelete();
     }
   }
