@@ -16,6 +16,10 @@ import {
   EventItemEdit
 } from '../src/eventItemEdit.js';
 
+import {
+  getStat
+} from '../src/stat.js';
+
 const filtersBlock = document.querySelector(`.trip-filter`);
 
 FILTERS_ARRAY.forEach((it) => {
@@ -61,3 +65,6 @@ const renderPoints = (events) => {
 };
 
 renderPoints(localData);
+
+
+const tableButton = document.querySelector(`.view-switch__item:first-child`);
