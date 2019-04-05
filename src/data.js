@@ -9,10 +9,12 @@ export const FILTERS_ARRAY = [{
   check: true
 },
 {
-  name: `future`
+  name: `future`,
+  check: false
 },
 {
-  name: `past`
+  name: `past`,
+  check: false
 }
 ];
 
@@ -64,7 +66,7 @@ export const DATA_POINTS = {
 const getTimePoints = () => {
   const timePoint = Date.now();
   const duration = timeShift();
-  const timeStart = timePoint;
+  const timeStart = timePoint + timeShift()[2];
   const timeEnd = timePoint + duration[2];
 
   return [timeStart, timeEnd];
@@ -88,7 +90,7 @@ const getRandomDescription = (text) => {
   return [...result].join(` `);
 };
 
-export const makeRandomEvent = () => ({
+const makeRandomEvent = () => ({
   type: getRandomTypePoint(),
   time: getTimePoints(),
   city: DATA_POINTS.CITIES[random(0, DATA_POINTS.CITIES.length - 1)],
@@ -97,3 +99,10 @@ export const makeRandomEvent = () => ({
   offers: getRandomArray(DATA_POINTS.OFFERS, 2),
   description: getRandomDescription(DATA_POINTS.DESCRIPTION_TEXT)
 });
+
+
+export const localData = [];
+
+for (let i = 0; i < 7; i++) {
+  localData.push(makeRandomEvent());
+}

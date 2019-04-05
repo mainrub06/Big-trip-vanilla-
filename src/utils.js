@@ -46,3 +46,25 @@ export const createElement = function (element) {
   point.innerHTML = element;
   return point.content;
 };
+
+export const deletePoint = (points, point) => {
+  const index = points.findIndex((it) => it === point);
+  points.splice(index, 1);
+  return points;
+};
+
+export const removeElements = (class1, class2) => {
+  let element = document.querySelectorAll(class1);
+  let elementEdit = document.querySelectorAll(class2);
+
+  if (element) {
+    element.forEach(function (item) {
+      item.remove();
+    });
+  }
+  if (elementEdit) {
+    elementEdit.forEach(function (item) {
+      item.remove();
+    });
+  }
+};
