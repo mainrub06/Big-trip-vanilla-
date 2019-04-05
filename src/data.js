@@ -66,7 +66,7 @@ export const DATA_POINTS = {
 const getTimePoints = () => {
   const timePoint = Date.now();
   const duration = timeShift();
-  const timeStart = timePoint;
+  const timeStart = timePoint + timeShift()[2];
   const timeEnd = timePoint + duration[2];
 
   return [timeStart, timeEnd];

@@ -29,8 +29,7 @@ export class Filter extends Component {
 
   _onFilterButtonClick() {
     if (typeof this._onFilter === `function`) {
-      this._onFilter;
-      console.log(this._name);
+      this._onFilter();
     }
   }
 
@@ -46,6 +45,16 @@ export class Filter extends Component {
     this._element = createElement(this.template);
     this.bind();
     return this._element;
+  }
+
+  getFilteredArray(array) {
+    switch (this._name) {
+      case `future`:
+        return array.filter((it) => Date.now() < it.time[0]);
+      case `past`:
+        return array.filter((it) => Date.now() < it.time[0]);
+    }
+    return array;
   }
 
   get template() {
