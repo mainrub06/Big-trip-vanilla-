@@ -16,10 +16,6 @@ import {
   EventItemEdit
 } from '../src/eventItemEdit.js';
 
-import {
-  getStat
-} from '../src/stat.js';
-
 const filtersBlock = document.querySelector(`.trip-filter`);
 
 FILTERS_ARRAY.forEach((it) => {
@@ -67,4 +63,29 @@ const renderPoints = (events) => {
 renderPoints(localData);
 
 
-const tableButton = document.querySelector(`.view-switch__item:first-child`);
+const tableBtn = document.querySelector(`.view-switch__item:first-child`);
+const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
+const tableBlock = document.querySelector(`.main`);
+const statBlock = document.querySelector(`.statistic`);
+
+
+const onTableBtn = () => {
+  statBtn.classList.remove(`view-switch__item--active`);
+  tableBtn.classList.add(`view-switch__item--active`);
+  tableBlock.classList.remove(`visually-hidden`);
+  statBlock.classList.add(`visually-hidden`);
+  tableBtn.removeEventListener(`click`, onTableBtn);
+  statBtn.addEventListener(`click`, onStatBtn);
+};
+
+const onStatBtn = () => {
+  statBtn.classList.add(`view-switch__item--active`);
+  tableBtn.classList.remove(`view-switch__item--active`);
+  tableBlock.classList.add(`visually-hidden`);
+  statBlock.classList.remove(`visually-hidden`);
+
+  statBtn.removeEventListener(`click`, onStatBtn);
+  tableBtn.addEventListener(`click`, onTableBtn);
+};
+
+statBtn.addEventListener(`click`, onStatBtn);
