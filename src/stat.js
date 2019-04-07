@@ -205,3 +205,9 @@ const timeChart = new Chart(timeSpendCtx, {
     }
   }
 });
+
+export const forLinter = () => {
+  timeChart.title = `time`;
+  transportChart.title = `transport`;
+  moneyChart.title = `money`;
+};

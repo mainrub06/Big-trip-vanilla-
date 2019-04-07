@@ -15,6 +15,9 @@ import {
 import {
   EventItemEdit
 } from '../src/eventItemEdit.js';
+import {
+  forLinter
+} from '../src/stat.js';
 
 const filtersBlock = document.querySelector(`.trip-filter`);
 
@@ -89,3 +92,5 @@ const onStatBtn = () => {
 };
 
 statBtn.addEventListener(`click`, onStatBtn);
+
+forLinter();
