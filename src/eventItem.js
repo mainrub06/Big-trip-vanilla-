@@ -50,10 +50,10 @@ export class EventItem extends Component {
   makeOffer(offers) {
     let htmlBtnOffer = ``;
     for (let item of offers) {
-      if (!item.checked) {
+      if (!item.accepted) {
         continue;
       }
-      htmlBtnOffer += `<li><button class="trip-point__offer">${item.name} + &euro;&nbsp;${item.price}</button></li>`;
+      htmlBtnOffer += `<li><button class="trip-point__offer">${item.title} + &euro;&nbsp;${item.price}</button></li>`;
     }
     return htmlBtnOffer;
   }

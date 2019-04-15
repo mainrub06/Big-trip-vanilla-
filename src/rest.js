@@ -1,4 +1,4 @@
-import EventItem from "../src/eventItem.js";
+import renderPoints from '../src/main.js';
 
 const Method = {
   GET: `GET`,
@@ -23,28 +23,43 @@ const consoleW = (response) => {
   return console.log(response);
 };
 
+const parseData = (data) => {
+  return data.map((it) => {
+    return {
+      type: it.type,
+      time: [it.date_from, it.date_to],
+      city: it.destination.name,
+      picture: it.destination.pictures.map((it) => it.src),
+      price: it.base_price,
+      offers: it.offers,
+      description: it.destination.description
+    }
+  });
+};
+
 export default class API {
   constructor({ endPoint, authorization }) {
     this._endPoint = endPoint;
     this._authorization = authorization;
   }
 
-  data() {
-    return this._load({url: `destinations`})
+  renderPoints() {
+    return this._load({ url: `points` })
       .then(toJSON)
-      .then(consoleW);
+      .then(parseData)
+      .then(renderPoints);
   }
 
-_load({ url, method = Method.GET, body = null, headers = new Headers() }) {
-  headers.append(`Authorization`, this._authorization);
+  _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
+    headers.append(`Authorization`, this._authorization);
 
-  return fetch(`${this._endPoint}/${url}`, { method, body, headers })
-    .then(checkStatus)
-    .catch((err) => {
-      window.console.error(`fetch error: ${err}`);
-      throw err;
-    });
-}
+    return fetch(`${this._endPoint}/${url}`, { method, body, headers })
+      .then(checkStatus)
+      .catch((err) => {
+        window.console.error(`fetch error: ${err}`);
+        throw err;
+      });
+  }
 }
 
 
