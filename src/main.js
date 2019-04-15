@@ -19,6 +19,8 @@ import {
   forLinter
 } from '../src/stat.js';
 
+import '../src/rest.js';
+
 const filtersBlock = document.querySelector(`.trip-filter`);
 
 FILTERS_ARRAY.forEach((it) => {
