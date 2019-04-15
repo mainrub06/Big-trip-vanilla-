@@ -19,7 +19,13 @@ import {
   forLinter
 } from '../src/stat.js';
 
-import '../src/rest.js';
+import API from '../src/rest.js';
+
+const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
+const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
+api.data();
 
 const filtersBlock = document.querySelector(`.trip-filter`);
 
