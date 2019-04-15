@@ -132,7 +132,7 @@ export class EventItemEdit extends Component {
   static createMapper(target) {
     return {
       offer(index) {
-        target.offers[index].checked = true;
+        target.offers[index].accepted = true;
       },
       destination(value) {
         target.city = value;
@@ -158,9 +158,9 @@ export class EventItemEdit extends Component {
   _processForm(formData) {
     const offersArray = this._offers.map((offer) => {
       return {
-        name: offer.name,
+        title: offer.title,
         price: offer.price,
-        checked: false
+        accepted: false
       };
     });
 
@@ -193,10 +193,10 @@ export class EventItemEdit extends Component {
 
   makeOffer(offers) {
     return offers.map((offer, i) => {
-      const nameId = offer.name.toLowerCase().replace(/ /g, `-`);
-      return `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}-${i}" name="offer" value="${i}" ${offer.checked ? `checked` : ``}>
+      const nameId = offer.title.toLowerCase().replace(/ /g, `-`);
+      return `<input class="point__offers-input visually-hidden" type="checkbox" id="${nameId}-${i}" name="offer" value="${i}" ${offer.accepted ? `checked` : ``}>
       <label for="${nameId}-${i}" class="point__offers-label">
-        <span class="point__offer-service">${offer.name}</span> + €<span class="point__offer-price">${offer.price}</span>
+        <span class="point__offer-service">${offer.title}</span> + €<span class="point__offer-price">${offer.price}</span>
       </label>`;
     }).join(``);
   }
