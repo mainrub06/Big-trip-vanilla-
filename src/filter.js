@@ -52,7 +52,7 @@ export class Filter extends Component {
       case `future`:
         return array.filter((it) => Date.now() < it.time[0]);
       case `past`:
-        return array.filter((it) => Date.now() < it.time[0]);
+        return array.filter((it) => Date.now() > it.time[0]);
     }
     return array;
   }

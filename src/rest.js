@@ -1,4 +1,7 @@
-import renderPoints from '../src/main.js';
+import { renderPoints, renderFilters } from '../src/main.js';
+import {
+  DATA_POINTS
+} from "../src/data.js";
 
 const Method = {
   GET: `GET`,
@@ -26,7 +29,7 @@ const consoleW = (response) => {
 const parseData = (data) => {
   return data.map((it) => {
     return {
-      type: it.type,
+      type: { typeName: it.type, icon: DATA_POINTS.POINTS_TYPE[it.type] },
       time: [it.date_from, it.date_to],
       city: it.destination.name,
       picture: it.destination.pictures.map((it) => it.src),
@@ -49,6 +52,27 @@ export default class API {
       .then(parseData)
       .then(renderPoints);
   }
+
+  renderFilters() {
+    return this._load({ url: `points` })
+      .then(toJSON)
+      .then(parseData)
+      .then(renderFilters);
+  }
+
+  getDestinations() {
+    return this._load({ url: `destinations` })
+      .then(toJSON)
+      .then(consoleW);
+  }
+
+  getOffers() {
+    return this._load({url: `offers`})
+      .then(toJSON)
+      .then(consoleW);
+  }
+
+
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
     headers.append(`Authorization`, this._authorization);
