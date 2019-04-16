@@ -18,26 +18,26 @@ import {
 import {
   forLinter
 } from '../src/stat.js';
-
 import API from '../src/rest.js';
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
-
+const api = new API({ endPoint: END_POINT, authorization: AUTHORIZATION });
 const filtersBlock = document.querySelector(`.trip-filter`);
 
-FILTERS_ARRAY.forEach((it) => {
-  const filter = new Filter(it);
-  filter.render();
-  filtersBlock.appendChild(filter.element);
+export const renderFilters = (events) => {
+  FILTERS_ARRAY.forEach((it) => {
+    const filter = new Filter(it);
+    filter.render();
+    filtersBlock.appendChild(filter.element);
 
-  filter.onFilter = () => {
-    const filteredArray = filter.getFilteredArray(events);
-    removeElements(`.trip-point`, `.point`);
-    renderPoints(filteredArray);
-  };
-});
+    filter.onFilter = () => {
+      const filteredArray = filter.getFilteredArray(events);
+      removeElements(`.trip-point`, `.point`);
+      renderPoints(filteredArray);
+    };
+  });
+};
 
 export const renderPoints = (events) => {
   const pointsBlock = document.querySelector(`.trip-day__items`);
@@ -70,9 +70,14 @@ export const renderPoints = (events) => {
   }
 };
 
-api.renderPoints();
-// renderPoints(localData);
+document.addEventListener(`DOMContentLoaded`, () => {
+  api.renderPoints();
+  api.renderFilters();
 
+
+  api.getDestinations();
+  api.getOffers();
+});
 
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
 const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
