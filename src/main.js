@@ -70,20 +70,27 @@ export const renderPoints = (events) => {
   }
 };
 
+const destinations = [];
+
 document.addEventListener(`DOMContentLoaded`, () => {
+  api.getDestinations()
+    .then((data) => {
+      Array.from(data).map((it) => destinations.push(it));
+    });
+
   api.renderPoints();
   api.renderFilters();
 
 
-  api.getDestinations();
   api.getOffers();
 });
+
+console.log(destinations);
 
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
 const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
 const tableBlock = document.querySelector(`.main`);
 const statBlock = document.querySelector(`.statistic`);
-
 
 const onTableBtn = () => {
   statBtn.classList.remove(`view-switch__item--active`);

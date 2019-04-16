@@ -2,6 +2,7 @@ import { renderPoints, renderFilters } from '../src/main.js';
 import {
   DATA_POINTS
 } from "../src/data.js";
+import Dest from '../src/destinations.js';
 
 const Method = {
   GET: `GET`,
@@ -63,16 +64,14 @@ export default class API {
   getDestinations() {
     return this._load({ url: `destinations` })
       .then(toJSON)
-      .then(consoleW);
+      .then(Dest.parseDestinations);
   }
 
   getOffers() {
-    return this._load({url: `offers`})
+    return this._load({ url: `offers` })
       .then(toJSON)
       .then(consoleW);
   }
-
-
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
     headers.append(`Authorization`, this._authorization);
