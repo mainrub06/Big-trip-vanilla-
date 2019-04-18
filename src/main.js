@@ -19,6 +19,8 @@ import {
   forLinter
 } from '../src/stat.js';
 import API from '../src/rest.js';
+import * as state from '../src/store/state.js';
+
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
@@ -70,22 +72,28 @@ export const renderPoints = (events) => {
   }
 };
 
-const destinations = [];
-
 document.addEventListener(`DOMContentLoaded`, () => {
   api.getDestinations()
     .then((data) => {
-      Array.from(data).map((it) => destinations.push(it));
+      state.destionations = data;
     });
 
-  api.renderPoints();
+  api.getOffers()
+    .then((data) => {
+      state.offers = data;
+    });
+
+  api.renderPoints()
+    .then((data) => {
+      state.points = data;
+    });
+
   api.renderFilters();
-
-
-  api.getOffers();
 });
 
-console.log(destinations);
+// renderPoints(state.points);
+
+console.log(state.points);
 
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
 const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
