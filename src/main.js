@@ -75,25 +75,27 @@ export const renderPoints = (events) => {
 document.addEventListener(`DOMContentLoaded`, () => {
   api.getDestinations()
     .then((data) => {
-      state.destionations = data;
+      state.default.destionations = data;
     });
 
   api.getOffers()
     .then((data) => {
-      state.offers = data;
+      state.default = {offers: data};
     });
 
   api.renderPoints()
     .then((data) => {
-      state.points = data;
+      state.default.points = data;
     });
 
   api.renderFilters();
+
 });
+console.log(state.default);
 
 // renderPoints(state.points);
 
-console.log(state.points);
+
 
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
 const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
