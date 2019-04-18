@@ -1,4 +1,4 @@
-import { renderPoints, renderFilters } from '../src/main.js';
+import renderFilters from '../src/main.js';
 import {
   DATA_POINTS
 } from "../src/data.js";
@@ -50,8 +50,7 @@ export default class API {
   renderPoints() {
     return this._load({ url: `points` })
       .then(toJSON)
-      .then(parseData)
-      .then(renderPoints);
+      .then(parseData);
   }
 
   renderFilters() {
@@ -70,7 +69,6 @@ export default class API {
   getOffers() {
     return this._load({ url: `offers` })
       .then(toJSON)
-      .then(consoleW);
   }
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {

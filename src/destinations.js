@@ -10,6 +10,12 @@ export default class Dest {
   }
 
   static parseDestinations(data) {
-    return data.map(Dest.parseDestination);
+    return data.map((it) => {
+      return {
+        name: it.name,
+        description: it.description,
+        picture: it.pictures
+      }
+    });
   }
 };
