@@ -21,7 +21,6 @@ import {
 import API from '../src/rest.js';
 import * as state from '../src/store/state.js';
 
-
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
 const api = new API({ endPoint: END_POINT, authorization: AUTHORIZATION });
@@ -75,28 +74,27 @@ export const renderPoints = (events) => {
 document.addEventListener(`DOMContentLoaded`, () => {
   api.getDestinations()
     .then((data) => {
-      state.default.destionations = data;
+      state.dataIn.destinations = data;
     });
 
   api.getOffers()
     .then((data) => {
-      state.default = {offers: data};
+      state.dataIn.offers = data;
     });
 
   api.renderPoints()
     .then((data) => {
-      state.default.points = data;
+      state.dataIn.points = data;
     });
 
   api.renderFilters();
 
 });
-console.log(state.default);
+
+const datas = Object.assign(state.dataIn);
+console.log(datas);
 
 // renderPoints(state.points);
-
-
-
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
 const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
 const tableBlock = document.querySelector(`.main`);

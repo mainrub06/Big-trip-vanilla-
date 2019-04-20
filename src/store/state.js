@@ -1,5 +1,7 @@
-export default {
+export const dataIn = {
   points: [],
-  destionations: [],
+  destinations: [],
   offers: []
-}
+};
+
+console.log(dataIn.offers);
