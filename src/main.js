@@ -19,7 +19,10 @@ import {
   forLinter
 } from '../src/stat.js';
 import API from '../src/rest.js';
-import * as state from '../src/store/state.js';
+import observer from './store/observer';
+import state from './store/state';
+import * as actionTypes from './store/action-types';
+import { runAction } from './store/actions.js';
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
@@ -34,13 +37,14 @@ export const renderFilters = (events) => {
 
     filter.onFilter = () => {
       const filteredArray = filter.getFilteredArray(events);
-      removeElements(`.trip-point`, `.point`);
       renderPoints(filteredArray);
     };
   });
 };
 
 export const renderPoints = (events) => {
+  removeElements(`.trip-point`, `.point`);
+
   const pointsBlock = document.querySelector(`.trip-day__items`);
 
   for (const event of events) {
@@ -71,28 +75,14 @@ export const renderPoints = (events) => {
   }
 };
 
-document.addEventListener(`DOMContentLoaded`, () => {
-  api.getDestinations()
-    .then((data) => {
-      state.dataIn.destinations = data;
-    });
+runAction(actionTypes.FETCH_ALL_DATA);
 
-  api.getOffers()
-    .then((data) => {
-      state.dataIn.offers = data;
-    });
-
-  api.renderPoints()
-    .then((data) => {
-      state.dataIn.points = data;
-    });
-
-  api.renderFilters();
-
+observer.on((type) => {
+  if (type === `SET_ALL_DATA`) {
+    renderPoints(state.points);
+    renderFilters(state.points);
+  }
 });
-
-const datas = Object.assign(state.dataIn);
-console.log(datas);
 
 // renderPoints(state.points);
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);

@@ -47,7 +47,7 @@ export default class API {
     this._authorization = authorization;
   }
 
-  renderPoints() {
+  getPoints() {
     return this._load({ url: `points` })
       .then(toJSON)
       .then(parseData);
