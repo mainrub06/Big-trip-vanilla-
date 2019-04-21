@@ -4,4 +4,4 @@ export const dataIn = {
   offers: []
 };
 
-console.log(dataIn.offers);
+export default dataIn;

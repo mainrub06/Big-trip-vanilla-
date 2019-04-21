@@ -1,21 +1,16 @@
-export default class Dest {
+export default class ModelDestinations {
   constructor(data) {
     this.name = data[`name`] || ``;
-    this.description = data[`description`] || ``;
+    this.description = data[`offers`] || ``;
     this.pictures = data[`pictures`] || [];
   }
 
   static parseDestination(data) {
-    return new Dest(data);
+    return new ModelDestinations(data);
   }
 
   static parseDestinations(data) {
-    return data.map((it) => {
-      return {
-        name: it.name,
-        description: it.description,
-        picture: it.pictures
-      }
-    });
+    return data.map(ModelDestinations.parseDestination);
   }
-};
+}
+

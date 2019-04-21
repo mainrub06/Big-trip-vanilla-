@@ -2,8 +2,7 @@ import {
   Filter
 } from '../src/filter.js';
 import {
-  FILTERS_ARRAY,
-  localData
+  FILTERS_ARRAY
 } from '../src/data.js';
 import {
   removeElements,
@@ -19,14 +18,14 @@ import {
   forLinter
 } from '../src/stat.js';
 import API from '../src/rest.js';
-import * as state from '../src/store/state.js';
+import observer from './store/observer';
+import state from './store/state';
+import * as actionTypes from './store/action-types';
+import { runAction } from './store/actions.js';
 
-const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
-const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
-const api = new API({ endPoint: END_POINT, authorization: AUTHORIZATION });
 const filtersBlock = document.querySelector(`.trip-filter`);
 
-export const renderFilters = (events) => {
+export const renderFilters = (events, destinations) => {
   FILTERS_ARRAY.forEach((it) => {
     const filter = new Filter(it);
     filter.render();
@@ -35,17 +34,16 @@ export const renderFilters = (events) => {
     filter.onFilter = () => {
       const filteredArray = filter.getFilteredArray(events);
       removeElements(`.trip-point`, `.point`);
-      renderPoints(filteredArray);
+      renderPoints(filteredArray, destinations);
     };
   });
 };
 
-export const renderPoints = (events) => {
+export const renderPoints = (events, destinations) => {
   const pointsBlock = document.querySelector(`.trip-day__items`);
-
   for (const event of events) {
     const point = new EventItem(event);
-    const pointEdit = new EventItemEdit(event);
+    const pointEdit = new EventItemEdit(event, destinations);
     point.render();
     pointsBlock.appendChild(point.element);
 
@@ -71,28 +69,34 @@ export const renderPoints = (events) => {
   }
 };
 
-document.addEventListener(`DOMContentLoaded`, () => {
-  api.getDestinations()
-    .then((data) => {
-      state.dataIn.destinations = data;
-    });
+runAction(actionTypes.FETCH_ALL_DATA);
 
-  api.getOffers()
-    .then((data) => {
-      state.dataIn.offers = data;
-    });
-
-  api.renderPoints()
-    .then((data) => {
-      state.dataIn.points = data;
-    });
-
-  api.renderFilters();
-
+observer.on((type) => {
+  if (type === `SET_ALL_DATA`) {
+    renderPoints(state.points, state.destinations);
+    renderFilters(state.points, state.destinations);
+  }
 });
 
-const datas = Object.assign(state.dataIn);
-console.log(datas);
+// document.addEventListener(`DOMContentLoaded`, () => {
+//   api.getDestinations()
+//     .then((data) => {
+//       state.dataIn.destinations = data;
+//     });
+
+//   api.getOffers()
+//     .then((data) => {
+//       state.dataIn.offers = data;
+//     });
+
+//   api.renderPoints()
+//     .then((data) => {
+//       state.dataIn.points = data;
+//     });
+
+//   api.renderFilters();
+
+// });
 
 // renderPoints(state.points);
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
