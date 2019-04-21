@@ -2,7 +2,7 @@ import renderFilters from '../src/main.js';
 import {
   DATA_POINTS
 } from "../src/data.js";
-import Dest from '../src/destinations.js';
+import ModelDestinations from "./destinations";
 
 const Method = {
   GET: `GET`,
@@ -21,10 +21,6 @@ const checkStatus = (response) => {
 
 const toJSON = (response) => {
   return response.json();
-};
-
-const consoleW = (response) => {
-  return console.log(response);
 };
 
 const parseData = (data) => {
@@ -47,7 +43,7 @@ export default class API {
     this._authorization = authorization;
   }
 
-  renderPoints() {
+  getPoints() {
     return this._load({ url: `points` })
       .then(toJSON)
       .then(parseData);
@@ -61,9 +57,9 @@ export default class API {
   }
 
   getDestinations() {
-    return this._load({ url: `destinations` })
+    return this._load({url: `destinations`})
       .then(toJSON)
-      .then(Dest.parseDestinations);
+      .then(ModelDestinations.parseDestinations);
   }
 
   getOffers() {

@@ -8,7 +8,7 @@ import {
 } from "../src/data.js";
 
 export class EventItemEdit extends Component {
-  constructor(data) {
+  constructor(data, destinations, offersIn) {
     super();
     this._type = data.type;
     this._city = data.city;
@@ -23,10 +23,37 @@ export class EventItemEdit extends Component {
     this._onChangeTimeEnd = this._onChangeTimeEnd.bind(this);
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
+    this._onChangePointDestination = this._onChangePointDestination.bind(this);
+
+    this._offersList = offersIn;
+    this._destinations = destinations;
 
     this._element = null;
     this._onSubmit = null;
     this._onDelete = null;
+  }
+
+  _onChangePointDestination(e) {
+    const value = e.target.value;
+
+    for (let item of this._destinations) {
+      if (item.name === value) {
+        this._city = item.name;
+        this._description = item.description;
+        this._pictures = item.pictures;
+      }
+    }
+
+    this._partialUpdate();
+  }
+
+  _makeHtmlDestinations() {
+    let str = ``;
+    for (let item of this._destinations) {
+      str += `<option value="${item.name}"></option>`;
+    }
+
+    return `<datalist id="destination-select">${str}</datalist>`;
   }
 
   _onChangePrice(e) {
@@ -78,6 +105,7 @@ export class EventItemEdit extends Component {
     this._element.querySelector(`.travel-way__select`).addEventListener(`change`, this._onChangeType);
     this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._isCheckedOffer);
+    this._element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onChangePointDestination);
 
     flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
       enableTime: true,
@@ -105,7 +133,7 @@ export class EventItemEdit extends Component {
     this._element.querySelector(`.travel-way__select-group`).removeEventListener(`click`, this._onChangeType);
     this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._isCheckedOffer);
-
+    this._element.querySelector(`.point__destination-input`).removeEventListener(`change`, this._onChangePointDestination);
     flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).destroy();
     flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).destroy();
   }
@@ -243,12 +271,7 @@ export class EventItemEdit extends Component {
         <div class="point__destination-wrap">
           <label class="point__destination-label" for="destination">${this._type.typeName} to</label>
           <input class="point__destination-input" list="destination-select" id="destination" value="${this._city}" name="destination">
-          <datalist id="destination-select">
-            <option value="airport"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
-            <option value="hotel"></option>
-          </datalist>
+          ${this._makeHtmlDestinations()}
         </div>
 
         <label class="point__time">
