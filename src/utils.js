@@ -68,3 +68,16 @@ export const removeElements = (class1, class2) => {
     });
   }
 };
+
+export const EMPTY_POINT_DATA = {
+  id: null,
+  type: {typeName: `taxi`, icon: `🚕`},
+  city: ``,
+  destination: [],
+  price: 0,
+  time: [new Date(), new Date()],
+  pictures: [],
+  offers: [],
+  description: ``,
+  favorite: false,
+};

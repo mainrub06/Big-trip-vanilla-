@@ -10,6 +10,7 @@ import {
 export class EventItemEdit extends Component {
   constructor(data, destinations, offersIn) {
     super();
+    this._id = data.id;
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
@@ -17,6 +18,7 @@ export class EventItemEdit extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._description = data.description;
+    this._favorite = data.favorite;
 
     this._onChangeType = this._onChangeType.bind(this);
     this._onChangeTimeStart = this._onChangeTimeStart.bind(this);
@@ -24,8 +26,9 @@ export class EventItemEdit extends Component {
     this._onSubmitButtonClick = this._onSubmitButtonClick.bind(this);
     this._onDeleteBtnClick = this._onDeleteBtnClick.bind(this);
     this._onChangePointDestination = this._onChangePointDestination.bind(this);
+    this._onFavoriteChange = this._onFavoriteChange.bind(this);
 
-    this._offersList = offersIn;
+    this._offersList = offersIn || ` `;
     this._destinations = destinations;
 
     this._element = null;
@@ -40,7 +43,7 @@ export class EventItemEdit extends Component {
       if (item.name === value) {
         this._city = item.name;
         this._description = item.description;
-        this._pictures = item.pictures;
+        this._picture = item.pictures;
       }
     }
 
@@ -49,6 +52,7 @@ export class EventItemEdit extends Component {
 
   _makeHtmlDestinations() {
     let str = ``;
+
     for (let item of this._destinations) {
       str += `<option value="${item.name}"></option>`;
     }
@@ -58,6 +62,10 @@ export class EventItemEdit extends Component {
 
   _onChangePrice(e) {
     this._price = e.target.value;
+  }
+
+  _onFavoriteChange(e) {
+    this._favorite = e.target.checked;
   }
 
   _onChangeTimeStart() {
@@ -106,6 +114,7 @@ export class EventItemEdit extends Component {
     this._element.querySelector(`button[type="reset"]`).addEventListener(`click`, this._onDeleteBtnClick);
     this._element.querySelector(`.point__offers-wrap`).addEventListener(`click`, this._isCheckedOffer);
     this._element.querySelector(`.point__destination-input`).addEventListener(`change`, this._onChangePointDestination);
+    this._element.querySelector(`.point__favorite-input`).addEventListener(`change`, this._onFavoriteChange);
 
     flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`), {
       enableTime: true,
@@ -134,6 +143,7 @@ export class EventItemEdit extends Component {
     this._element.querySelector(`button[type="reset"]`).removeEventListener(`click`, this._onDeleteBtnClick);
     this._element.querySelector(`.point__offers-wrap`).removeEventListener(`click`, this._isCheckedOffer);
     this._element.querySelector(`.point__destination-input`).removeEventListener(`change`, this._onChangePointDestination);
+    this._element.querySelector(`.point__favorite-input`).removeEventListener(`change`, this._onFavoriteChange);
     flatpickr(this._element.querySelector(`.point__time input[name="time-start"]`)).destroy();
     flatpickr(this._element.querySelector(`.point__time input[name="time-end"]`)).destroy();
   }
@@ -145,6 +155,16 @@ export class EventItemEdit extends Component {
         typeName: value,
         icon: DATA_POINTS.POINTS_TYPE[value]
       };
+      for (let item of this._offersList) {
+        if (item.type === value) {
+          this._offers = item.offers.map((offer) => {
+            return {
+              title: offer.name,
+              price: offer.price,
+            };
+          });
+        }
+      }
       this._partialUpdate();
     }
   }
@@ -180,6 +200,11 @@ export class EventItemEdit extends Component {
       [`time-end`](value) {
         target.time[1] = new Date(moment(value, `h:mm`));
       },
+      favorite(value) {
+        if (value === `on`) {
+          target.favorite = true;
+        }
+      },
     };
   }
 
@@ -193,12 +218,14 @@ export class EventItemEdit extends Component {
     });
 
     const entry = {
+      id: this._id,
       type: this._type,
       offers: offersArray,
       time: [],
       price: null,
       city: ``,
       totalPrice: 0,
+      favorite: false,
     };
 
     const pointMapper = EventItemEdit.createMapper.call(this, entry);
@@ -212,6 +239,7 @@ export class EventItemEdit extends Component {
   }
 
   update(data) {
+    this._id = data.id;
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
@@ -229,8 +257,15 @@ export class EventItemEdit extends Component {
     }).join(``);
   }
 
+  makeHtmlImage(images) {
+    if (images) {
+      return images.map((item) => `<img src="${item}" alt="picture from place" class="point__destination-image">`).join(``);
+    }
+    return ``;
+  }
+
   get template() {
-    return /* html*/ `<article class="point">
+    return /* html*/ `<article class="point" id="${this._id}">
     <form action="" method="get">
       <header class="point__header">
         <label class="point__date">
@@ -291,7 +326,7 @@ export class EventItemEdit extends Component {
         </div>
 
         <div class="paint__favorite-wrap">
-          <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite">
+          <input type="checkbox" class="point__favorite-input visually-hidden" id="favorite" name="favorite" ${this._favorite ? `checked` : ``}>
           <label class="point__favorite" for="favorite">favorite</label>
         </div>
       </header>
@@ -309,17 +344,18 @@ export class EventItemEdit extends Component {
           <h3 class="point__details-title">Destination</h3>
           <p class="point__destination-text">${this._description}</p>
           <div class="point__destination-images">
+            ${this.makeHtmlImage(this._picture)}
+            <!-- <img src="${this._picture}" alt="picture from place" class="point__destination-image">
             <img src="${this._picture}" alt="picture from place" class="point__destination-image">
             <img src="${this._picture}" alt="picture from place" class="point__destination-image">
             <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-            <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-            <img src="${this._picture}" alt="picture from place" class="point__destination-image">
+            <img src="${this._picture}" alt="picture from place" class="point__destination-image"> -->
           </div>
         </section>
         <input type="hidden" class="point__total-price" name="total-price" value="">
       </section>
     </form>
   </article>
-  `.trim();
+  `;
   }
 }

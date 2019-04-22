@@ -7,6 +7,7 @@ import moment from "moment";
 export class EventItem extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;
@@ -16,9 +17,6 @@ export class EventItem extends Component {
     this._description = data.description;
 
     this._element = null;
-    this._state = {
-      // Состояние компонента
-    };
     this._onEdit = null;
   }
 
@@ -33,7 +31,7 @@ export class EventItem extends Component {
   }
 
   get template() {
-    return /* html*/ `<article class="trip-point">
+    return /* html*/ `<article class="trip-point" id="${this._id}">
     <i class="trip-icon">${this._type.icon}</i>
     <h3 class="trip-point__title">${this._type.typeName} to ${this._city}</h3>
     <p class="trip-point__schedule">
@@ -44,7 +42,7 @@ export class EventItem extends Component {
     <ul class="trip-point__offers">
       ${this.makeOffer(this._offers)}
     </ul>
-    </article>`.trim();
+    </article>`;
   }
 
   makeOffer(offers) {
@@ -84,6 +82,7 @@ export class EventItem extends Component {
   }
 
   update(data) {
+    this._id = data.id;
     this._type = data.type;
     this._city = data.city;
     this._time = data.time;

@@ -1,8 +1,9 @@
 import state from './state';
 import observer from './observer';
 import * as actionTypes from './action-types';
-
 import API from '../../src/rest.js';
+import {toRow} from '../../src/rest.js';
+
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
@@ -15,6 +16,12 @@ export const actions = {
       api.getDestinations()
     ])
       .then((data) => runAction(actionTypes.SET_ALL_DATA, data));
+  },
+
+  [actionTypes.UPDATE_POINT_DATA](datas) {
+    const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+    api.updatePoint({ id: datas.id, data: datas })
+      .then(toRow);
   },
 
   [actionTypes.SET_ALL_DATA]([points, offers, destinations]) {
