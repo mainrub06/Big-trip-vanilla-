@@ -6,7 +6,8 @@ import {
 } from '../src/data.js';
 import {
   removeElements,
-  deletePoint
+  deletePoint,
+  EMPTY_POINT_DATA
 } from '../src/utils.js';
 import {
   EventItem
@@ -24,6 +25,8 @@ import * as actionTypes from './store/action-types';
 import { runAction } from './store/actions.js';
 
 const filtersBlock = document.querySelector(`.trip-filter`);
+const buttonNewPoint = document.querySelector(`.new-event`);
+const pointsBlock = document.querySelector(`.trip-day__items`);
 
 export const renderFilters = (events, destinations) => {
   FILTERS_ARRAY.forEach((it) => {
@@ -39,11 +42,11 @@ export const renderFilters = (events, destinations) => {
   });
 };
 
-export const renderPoints = (events, destinations) => {
-  const pointsBlock = document.querySelector(`.trip-day__items`);
+export const renderPoints = (events, destinations, offers) => {
+
   for (const event of events) {
     const point = new EventItem(event);
-    const pointEdit = new EventItemEdit(event, destinations);
+    const pointEdit = new EventItemEdit(event, destinations, offers);
     point.render();
     pointsBlock.appendChild(point.element);
 
@@ -56,6 +59,7 @@ export const renderPoints = (events, destinations) => {
     pointEdit.onSubmit = (newData) => {
       point.update(newData);
       pointEdit.update(newData);
+      runAction(actionTypes.UPDATE_POINT_DATA, newData);
       point.render();
       pointsBlock.replaceChild(point.element, pointEdit.element);
       pointEdit.unrender();
@@ -73,32 +77,23 @@ runAction(actionTypes.FETCH_ALL_DATA);
 
 observer.on((type) => {
   if (type === `SET_ALL_DATA`) {
-    renderPoints(state.points, state.destinations);
-    renderFilters(state.points, state.destinations);
+    renderPoints(state.points, state.destinations, state.offers);
+    renderFilters(state.points, state.destinations, state.offers);
   }
+
+  buttonNewPoint.addEventListener(`click`, () => {
+    let newPoint =  new EventItem(EMPTY_POINT_DATA, state.destinations, state.offers);
+    let newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
+    newPointEdit.render();
+    pointsBlock.insertBefore(newPointEdit.element, pointsBlock.firstChild);
+
+    newPoint.onSubmit = (newData) => {
+      window.console.log(newData);
+      // provider.createPoint({ point: newData });
+    };
+  });
 });
 
-// document.addEventListener(`DOMContentLoaded`, () => {
-//   api.getDestinations()
-//     .then((data) => {
-//       state.dataIn.destinations = data;
-//     });
-
-//   api.getOffers()
-//     .then((data) => {
-//       state.dataIn.offers = data;
-//     });
-
-//   api.renderPoints()
-//     .then((data) => {
-//       state.dataIn.points = data;
-//     });
-
-//   api.renderFilters();
-
-// });
-
-// renderPoints(state.points);
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);
 const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
 const tableBlock = document.querySelector(`.main`);
