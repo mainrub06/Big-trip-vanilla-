@@ -1,20 +1,55 @@
-import Component from "./component";
+import {Component} from './component';
+import {EventItem} from './eventItem';
 
 export default class TravelDay extends Component {
   constructor(data) {
     super();
-    this._date = data.split(` `);
+    this._date = data;
+    this._points = [];
+  }
+
+  renderPoints() {
+    const pointsData = this._data.points;
+    const $items = this._element.querySelector(`trip-day__items`);
+
+    this._points = pointsData.map((data) => {
+      const eventItem = new EventItem(data);
+
+      $items.appendChild(eventItem.render());
+
+      return eventItem;
+    });
+  }
+
+  unrenderPoints() {
+    const points = this._points;
+
+    points.forEach((point) => {
+      point.unrender();
+    });
+
+    this._points = [];
+  }
+
+  bind() {
+    this.renderPoints();
+  }
+
+  unbind() {
+    this.unrenderPoints();
   }
 
   get template() {
-    const MOUTH_AND_YEAR = `${this._date[1]} ${this._date[2]}`;
+    const date = new Date(this._data.timestamp);
+    const day = date.getDate();
+    const monthAndYear = date.toLocaleDateString(`en`, {formatMatcher: `month year`});
+
     return `<section class="trip-day">
               <article class="trip-day__info">
                 <span class="trip-day__caption">Day</span>
-                <p class="trip-day__number">${this._date[0]}</p>
-                <h2 class="trip-day__title">${MOUTH_AND_YEAR}</h2>
+                <p class="trip-day__number">${day}</p>
+                <h2 class="trip-day__title">${monthAndYear}</h2>
               </article>
-
               <div class="trip-day__items"></div>
             </section>`.trim();
   }

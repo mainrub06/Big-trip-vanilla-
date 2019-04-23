@@ -4,7 +4,6 @@ import * as actionTypes from './action-types';
 import API from '../../src/rest.js';
 import { toRow } from '../../src/rest.js';
 import { renderPoints } from '../../src/main.js';
-import {Price} from '../../src/total-price.js';
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
@@ -20,10 +19,17 @@ export const actions = {
       .then((data) => runAction(actionTypes.SET_ALL_DATA, data));
   },
 
-  [actionTypes.UPDATE_POINT_DATA](datas) {
-    state.points[datas.id] = datas;
-    api.updatePoint({ id: datas.id, data: datas })
-      .then(toRow);
+  [actionTypes.SET_POINT_DATA](data) {
+    const index = state.points.findIndex((point) => point.id === data.id);
+
+    if (index >= 0) {
+      state.points[index] = data;
+    }
+  },
+
+  [actionTypes.UPDATE_POINT_DATA](data) {
+    api.updatePoint({ id: data.id, data })
+      .then((data) => runAction(actionTypes.SET_POINT_DATA, data));
   },
 
   [actionTypes.SET_ALL_DATA]([points, offers, destinations]) {
@@ -43,13 +49,6 @@ export const actions = {
     state.points.splice(id, 1);
     renderPoints(state.points, state.destinations, state.offers);
     api.deleteTask({ id });
-  },
-
-  [actionTypes.COUNT_PRICE](block) {
-    let totalPriceElement = document.querySelector(`.trip__total`);
-    const totalPrice = new Price(state.points);
-    totalPrice.render();
-    block.replaceChild(totalPrice.element, totalPriceElement);
   }
 };
 
