@@ -84,8 +84,6 @@ observer.on((type) => {
     renderFilters(state.points, state.destinations, state.offers);
   }
 
-
-
   buttonNewPoint.addEventListener(`click`, () => {
     const newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
     newPointEdit.render();
@@ -121,7 +119,6 @@ const onStatBtn = () => {
   tableBtn.classList.remove(`view-switch__item--active`);
   tableBlock.classList.add(`visually-hidden`);
   statBlock.classList.remove(`visually-hidden`);
-
   statBtn.removeEventListener(`click`, onStatBtn);
   tableBtn.addEventListener(`click`, onTableBtn);
 };
