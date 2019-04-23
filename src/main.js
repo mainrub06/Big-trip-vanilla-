@@ -21,6 +21,7 @@ import {
 import API from '../src/rest.js';
 import observer from './store/observer';
 import state from './store/state';
+import * as getters from './store/getters';
 import * as actionTypes from './store/action-types';
 import { runAction } from './store/actions.js';
 
@@ -76,6 +77,23 @@ export const renderPoints = (events, destinations, offers) => {
   }
 };
 
+import { Price } from './total-price.js';
+
+let totalPrice;
+
+const renderTotalPrice = () => {
+  const totalPriceElement = document.querySelector(`.trip__total`);
+
+  if (totalPrice) {
+    totalPrice.unrender();
+  }
+
+  totalPrice = new Price(getters.getTotalPrice());
+  totalPrice.render();
+
+  totalPriceBlock.replaceChild(totalPrice.element, totalPriceElement);
+};
+
 runAction(actionTypes.FETCH_ALL_DATA);
 
 observer.on((type) => {
@@ -84,20 +102,24 @@ observer.on((type) => {
     renderFilters(state.points, state.destinations, state.offers);
   }
 
-  buttonNewPoint.addEventListener(`click`, () => {
-    const newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
-    newPointEdit.render();
-    pointsBlock.insertBefore(newPointEdit.element, pointsBlock.firstChild);
+  if ([`SET_ALL_DATA`, `SET_POINT_DATA`].includes(type)) {
+    renderTotalPrice();
+  }
+});
 
-    newPointEdit.onSubmit = (newData) => {
-      newData.id = `${state.points.length}`;
-      runAction(actionTypes.PUSH_AND_RENDER_POINTS, newData);
-    };
+buttonNewPoint.addEventListener(`click`, () => {
+  const newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
+  newPointEdit.render();
+  pointsBlock.insertBefore(newPointEdit.element, pointsBlock.firstChild);
 
-    newPointEdit.onDelete = () => {
-      pointsBlock.removeChild(newPointEdit.element);
-    };
-  });
+  newPointEdit.onSubmit = (newData) => {
+    newData.id = `${state.points.length}`;
+    runAction(actionTypes.PUSH_AND_RENDER_POINTS, newData);
+  };
+
+  newPointEdit.onDelete = () => {
+    pointsBlock.removeChild(newPointEdit.element);
+  };
 });
 
 const tableBtn = document.querySelector(`.view-switch__item:first-child`);

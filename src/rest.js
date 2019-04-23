@@ -25,20 +25,22 @@ const toJSON = (response) => {
   return response.json();
 };
 
-const parseData = (data) => {
-  return data.map((it) => {
-    return {
-      id: it.id,
-      type: { typeName: it.type, icon: DATA_POINTS.POINTS_TYPE[it.type] },
-      time: [it.date_from, it.date_to],
-      city: it.destination.name,
-      picture: it.destination.pictures,
-      price: it.base_price,
-      offers: it.offers,
-      description: it.destination.description,
-      favorite: it.is_favorite
-    }
-  });
+export const parsePointData = (data) => {
+  return {
+    id: data.id,
+    type: { typeName: data.type, icon: DATA_POINTS.POINTS_TYPE[data.type] },
+    time: [data.date_from, data.date_to],
+    city: data.destination.name,
+    picture: data.destination.pictures,
+    price: parseFloat(data.base_price, 10),
+    offers: data.offers,
+    description: data.destination.description,
+    favorite: data.is_favorite
+  };
+}
+
+export const parsePointsListData = (dataList) => {
+  return dataList.map(parsePointData);
 };
 
 export const toRow = (data) => {
@@ -67,7 +69,7 @@ export default class API {
   getPoints() {
     return this._load({ url: `points` })
       .then(toJSON)
-      .then(parseData);
+      .then(parsePointsListData);
   }
 
   getDestinations() {
@@ -83,14 +85,16 @@ export default class API {
   }
 
   updatePoint({ id, data }) {
-    window.console.log(data);
+    const preparedData = toRow(data);
+
     return this._load({
       url: `points/${id}`,
       method: Method.PUT,
-      body: JSON.stringify(data),
+      body: JSON.stringify(preparedData),
       headers: new Headers({ 'Content-Type': `application/json` }),
     })
-      .then(toJSON);
+      .then(toJSON)
+      .then(parsePointData);
   }
 
   createPoint({ task }) {
