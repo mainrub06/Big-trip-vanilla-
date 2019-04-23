@@ -24,11 +24,13 @@ import state from './store/state';
 import * as getters from './store/getters';
 import * as actionTypes from './store/action-types';
 import { runAction } from './store/actions.js';
+import TripDay from './trip-day';
 
 const filtersBlock = document.querySelector(`.trip-filter`);
 const buttonNewPoint = document.querySelector(`.new-event`);
 const pointsBlock = document.querySelector(`.trip-day__items`);
 const totalPriceBlock = document.querySelector(`.trip`);
+const $tripPoints = document.querySelector(`.trip-points`);
 
 export const renderFilters = (events, destinations, offers) => {
   FILTERS_ARRAY.forEach((it) => {
@@ -44,37 +46,47 @@ export const renderFilters = (events, destinations, offers) => {
 };
 
 export const renderPoints = (events, destinations, offers) => {
-  removeElements(`.trip-point`, `.point`);
-  for (const event of events) {
-    const point = new EventItem(event);
-    const pointEdit = new EventItemEdit(event, destinations, offers);
-    point.render();
-    pointsBlock.appendChild(point.element);
-    runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
+  const groups = getters.getPointsGroups();
 
-    point.onEdit = () => {
-      pointEdit.render();
-      pointsBlock.replaceChild(pointEdit.element, point.element);
-      point.unrender();
-    };
+  console.log(groups)
 
-    pointEdit.onSubmit = (newData) => {
-      point.update(newData);
-      pointEdit.update(newData);
-      runAction(actionTypes.UPDATE_POINT_DATA, newData);
-      runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
-      point.render();
-      pointsBlock.replaceChild(point.element, pointEdit.element);
-      pointEdit.unrender();
-    };
+  groups.forEach((data) => {
+    const tripDay = new TripDay(data);
 
-    pointEdit.onDelete = () => {
-      deletePoint(events, pointEdit);
-      pointsBlock.removeChild(pointEdit.element);
-      runAction(actionTypes.REMOVE_POINT, pointEdit.element.id);
-      pointEdit.unrender();
-    };
-  }
+    $tripPoints.appendChild(tripDay.render());
+  });
+
+  // removeElements(`.trip-point`, `.point`);
+  // for (const event of events) {
+  //   const point = new EventItem(event);
+  //   const pointEdit = new EventItemEdit(event, destinations, offers);
+  //   point.render();
+  //   pointsBlock.appendChild(point.element);
+  //   runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
+
+  //   point.onEdit = () => {
+  //     pointEdit.render();
+  //     pointsBlock.replaceChild(pointEdit.element, point.element);
+  //     point.unrender();
+  //   };
+
+  //   pointEdit.onSubmit = (newData) => {
+  //     point.update(newData);
+  //     pointEdit.update(newData);
+  //     runAction(actionTypes.UPDATE_POINT_DATA, newData);
+  //     runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
+  //     point.render();
+  //     pointsBlock.replaceChild(point.element, pointEdit.element);
+  //     pointEdit.unrender();
+  //   };
+
+  //   pointEdit.onDelete = () => {
+  //     deletePoint(events, pointEdit);
+  //     pointsBlock.removeChild(pointEdit.element);
+  //     runAction(actionTypes.REMOVE_POINT, pointEdit.element.id);
+  //     pointEdit.unrender();
+  //   };
+  // }
 };
 
 import { Price } from './total-price.js';

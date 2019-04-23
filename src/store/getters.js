@@ -25,7 +25,7 @@ export const getTotalPrice = () => {
   }, 0);
 };
 
-export const getPointGroups = () => {
+export const getPointsGroups = () => {
   const groups = _.groupBy(state.points, getTimestampByPoint);
 
   return Object.entries(groups)
