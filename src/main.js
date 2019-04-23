@@ -27,8 +27,9 @@ import { runAction } from './store/actions.js';
 const filtersBlock = document.querySelector(`.trip-filter`);
 const buttonNewPoint = document.querySelector(`.new-event`);
 const pointsBlock = document.querySelector(`.trip-day__items`);
+const totalPriceBlock = document.querySelector(`.trip`);
 
-export const renderFilters = (events, destinations) => {
+export const renderFilters = (events, destinations, offers) => {
   FILTERS_ARRAY.forEach((it) => {
     const filter = new Filter(it);
     filter.render();
@@ -36,19 +37,19 @@ export const renderFilters = (events, destinations) => {
 
     filter.onFilter = () => {
       const filteredArray = filter.getFilteredArray(events);
-      removeElements(`.trip-point`, `.point`);
-      renderPoints(filteredArray, destinations);
+      renderPoints(filteredArray, destinations, offers);
     };
   });
 };
 
 export const renderPoints = (events, destinations, offers) => {
-
+  removeElements(`.trip-point`, `.point`);
   for (const event of events) {
     const point = new EventItem(event);
     const pointEdit = new EventItemEdit(event, destinations, offers);
     point.render();
     pointsBlock.appendChild(point.element);
+    runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
 
     point.onEdit = () => {
       pointEdit.render();
@@ -60,6 +61,7 @@ export const renderPoints = (events, destinations, offers) => {
       point.update(newData);
       pointEdit.update(newData);
       runAction(actionTypes.UPDATE_POINT_DATA, newData);
+      runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
       point.render();
       pointsBlock.replaceChild(point.element, pointEdit.element);
       pointEdit.unrender();
@@ -68,6 +70,7 @@ export const renderPoints = (events, destinations, offers) => {
     pointEdit.onDelete = () => {
       deletePoint(events, pointEdit);
       pointsBlock.removeChild(pointEdit.element);
+      runAction(actionTypes.REMOVE_POINT, pointEdit.element.id);
       pointEdit.unrender();
     };
   }
@@ -81,15 +84,20 @@ observer.on((type) => {
     renderFilters(state.points, state.destinations, state.offers);
   }
 
+
+
   buttonNewPoint.addEventListener(`click`, () => {
-    let newPoint =  new EventItem(EMPTY_POINT_DATA, state.destinations, state.offers);
-    let newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
+    const newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
     newPointEdit.render();
     pointsBlock.insertBefore(newPointEdit.element, pointsBlock.firstChild);
 
-    newPoint.onSubmit = (newData) => {
-      window.console.log(newData);
-      // provider.createPoint({ point: newData });
+    newPointEdit.onSubmit = (newData) => {
+      newData.id = `${state.points.length}`;
+      runAction(actionTypes.PUSH_AND_RENDER_POINTS, newData);
+    };
+
+    newPointEdit.onDelete = () => {
+      pointsBlock.removeChild(newPointEdit.element);
     };
   });
 });

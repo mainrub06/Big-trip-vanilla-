@@ -259,7 +259,7 @@ export class EventItemEdit extends Component {
 
   makeHtmlImage(images) {
     if (images) {
-      return images.map((item) => `<img src="${item}" alt="picture from place" class="point__destination-image">`).join(``);
+      return images.map((item) => `<img src="${item.src}" alt="${item.description}" class="point__destination-image">`).join(``);
     }
     return ``;
   }
@@ -345,11 +345,6 @@ export class EventItemEdit extends Component {
           <p class="point__destination-text">${this._description}</p>
           <div class="point__destination-images">
             ${this.makeHtmlImage(this._picture)}
-            <!-- <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-            <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-            <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-            <img src="${this._picture}" alt="picture from place" class="point__destination-image">
-            <img src="${this._picture}" alt="picture from place" class="point__destination-image"> -->
           </div>
         </section>
         <input type="hidden" class="point__total-price" name="total-price" value="">

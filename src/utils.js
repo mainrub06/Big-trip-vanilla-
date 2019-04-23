@@ -75,7 +75,7 @@ export const EMPTY_POINT_DATA = {
   city: ``,
   destination: [],
   price: 0,
-  time: [new Date(), new Date()],
+  time: [0, 0],
   pictures: [],
   offers: [],
   description: ``,
