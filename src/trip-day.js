@@ -4,13 +4,13 @@ import {EventItem} from './eventItem';
 export default class TravelDay extends Component {
   constructor(data) {
     super();
-    this._date = data;
+    this._data = data;
     this._points = [];
   }
 
   renderPoints() {
     const pointsData = this._data.points;
-    const $items = this._element.querySelector(`trip-day__items`);
+    const $items = this._element.querySelector(`.trip-day__items`);
 
     this._points = pointsData.map((data) => {
       const eventItem = new EventItem(data);
