@@ -4,6 +4,7 @@ import {
 } from "../src/data.js";
 import ModelDestinations from "./destinations";
 import ModelOffers from "./offers";
+import moment from "moment";
 
 const Method = {
   GET: `GET`,
@@ -31,7 +32,7 @@ const parseData = (data) => {
       type: { typeName: it.type, icon: DATA_POINTS.POINTS_TYPE[it.type] },
       time: [it.date_from, it.date_to],
       city: it.destination.name,
-      picture: it.destination.pictures.map((it) => it.src),
+      picture: it.destination.pictures,
       price: it.base_price,
       offers: it.offers,
       description: it.destination.description,
@@ -43,7 +44,7 @@ const parseData = (data) => {
 export const toRow = (data) => {
   return {
     'id': data.id,
-    'type': data.type.typeName,
+    'type': data.type,
     'base_price': data.price,
     'destination': {
       'name': data.city,
@@ -67,13 +68,6 @@ export default class API {
     return this._load({ url: `points` })
       .then(toJSON)
       .then(parseData);
-  }
-
-  renderFilters() {
-    return this._load({ url: `points` })
-      .then(toJSON)
-      .then(parseData)
-      .then(renderFilters);
   }
 
   getDestinations() {
@@ -106,8 +100,11 @@ export default class API {
       body: JSON.stringify(task),
       headers: new Headers({ 'Content-Type': `application/json` }),
     })
-      .then(toJSON)
-      .then(ModelPoint.parsePoint);
+      .then(toJSON);
+  }
+
+  deleteTask({id}) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
   }
 
   _load({ url, method = Method.GET, body = null, headers = new Headers() }) {
@@ -121,8 +118,3 @@ export default class API {
       });
   }
 }
-
-
-// deleteTask({id}) {
-//   return this._load({url: `points/${id}`, method: Method.DELETE});
-// }

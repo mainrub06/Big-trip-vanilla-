@@ -1,3 +1,6 @@
 export const FETCH_ALL_DATA = `FETCH_ALL_DATA`;
 export const SET_ALL_DATA = `SET_ALL_DATA`;
 export const UPDATE_POINT_DATA = `UPDATE_POINT_DATA`;
+export const PUSH_AND_RENDER_POINTS = `PUSH_AND_RENDER_POINTS`;
+export const REMOVE_POINT = `REMOVE_POINT`;
+export const COUNT_PRICE = `COUNT_PRICE`;
