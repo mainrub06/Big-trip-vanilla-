@@ -1,7 +1,6 @@
-import {getClearDuration} from "../src/utils.js";
-import {
-  Component
-} from "../src/component.js";
+import { Component } from "../src/component";
+import { getClearDuration } from "../src/utils";
+
 import moment from "moment";
 
 export class EventItem extends Component {
@@ -35,8 +34,14 @@ export class EventItem extends Component {
     <i class="trip-icon">${this._type.icon}</i>
     <h3 class="trip-point__title">${this._type.typeName} to ${this._city}</h3>
     <p class="trip-point__schedule">
-      <span class="trip-point__timetable">${this.maketime(this._time[0], this._time[1])}</span>
-      <span class="trip-point__duration">${this.makeDuration(this._time[0], this._time[1])}</span>
+      <span class="trip-point__timetable">${this.maketime(
+        this._time[0],
+        this._time[1]
+      )}</span>
+      <span class="trip-point__duration">${this.makeDuration(
+        this._time[0],
+        this._time[1]
+      )}</span>
     </p>
     <p class="trip-point__price">&euro;&nbsp;${this._price}</p>
     <ul class="trip-point__offers">
@@ -74,7 +79,10 @@ export class EventItem extends Component {
   }
 
   unbind() {
-    this._element.removeEventListener(`click`, this._onEditButtonClick.bind(this));
+    this._element.removeEventListener(
+      `click`,
+      this._onEditButtonClick.bind(this)
+    );
   }
 
   get element() {

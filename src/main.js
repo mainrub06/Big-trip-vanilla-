@@ -1,30 +1,16 @@
-import {
-  Filter
-} from '../src/filter.js';
-import {
-  FILTERS_ARRAY
-} from '../src/data.js';
-import {
-  removeElements,
-  deletePoint,
-  EMPTY_POINT_DATA
-} from '../src/utils.js';
-import {
-  EventItem
-} from '../src/eventItem.js';
-import {
-  EventItemEdit
-} from '../src/eventItemEdit.js';
-import {
-  forLinter
-} from '../src/stat.js';
-import API from '../src/rest.js';
-import observer from './store/observer';
-import state from './store/state';
-import * as getters from './store/getters';
-import * as actionTypes from './store/action-types';
-import { runAction } from './store/actions.js';
-import TripDay from './trip-day';
+import { Filter } from "../src/filter";
+import { FILTERS_ARRAY } from "../src/data";
+import { removeElements, deletePoint, EMPTY_POINT_DATA } from "../src/utils";
+import { EventItem } from "../src/eventItem";
+import { EventItemEdit } from "../src/eventItemEdit";
+import { forLinter } from "../src/stat";
+import API from "../src/rest";
+import observer from "./store/observer";
+import state from "./store/state";
+import * as getters from "./store/getters";
+import * as actionTypes from "./store/action-types";
+import { runAction } from "./store/actions";
+import TripDay from "./trip-day";
 
 const filtersBlock = document.querySelector(`.trip-filter`);
 const buttonNewPoint = document.querySelector(`.new-event`);
@@ -48,7 +34,7 @@ export const renderFilters = (events, destinations, offers) => {
 export const renderPoints = (events, destinations, offers) => {
   const groups = getters.getPointsGroups();
 
-  console.log(groups)
+  console.log(groups);
 
   groups.forEach((data) => {
     const tripDay = new TripDay(data);
@@ -56,40 +42,40 @@ export const renderPoints = (events, destinations, offers) => {
     $tripPoints.appendChild(tripDay.render());
   });
 
-  // removeElements(`.trip-point`, `.point`);
-  // for (const event of events) {
-  //   const point = new EventItem(event);
-  //   const pointEdit = new EventItemEdit(event, destinations, offers);
-  //   point.render();
-  //   pointsBlock.appendChild(point.element);
-  //   runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
+  removeElements(`.trip-point`, `.point`);
+  for (const event of events) {
+    const point = new EventItem(event);
+    const pointEdit = new EventItemEdit(event, destinations, offers);
+    point.render();
+    pointsBlock.appendChild(point.element);
+    runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
 
-  //   point.onEdit = () => {
-  //     pointEdit.render();
-  //     pointsBlock.replaceChild(pointEdit.element, point.element);
-  //     point.unrender();
-  //   };
+    point.onEdit = () => {
+      pointEdit.render();
+      pointsBlock.replaceChild(pointEdit.element, point.element);
+      point.unrender();
+    };
 
-  //   pointEdit.onSubmit = (newData) => {
-  //     point.update(newData);
-  //     pointEdit.update(newData);
-  //     runAction(actionTypes.UPDATE_POINT_DATA, newData);
-  //     runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
-  //     point.render();
-  //     pointsBlock.replaceChild(point.element, pointEdit.element);
-  //     pointEdit.unrender();
-  //   };
+    pointEdit.onSubmit = (newData) => {
+      point.update(newData);
+      pointEdit.update(newData);
+      runAction(actionTypes.UPDATE_POINT_DATA, newData);
+      runAction(actionTypes.COUNT_PRICE, totalPriceBlock);
+      point.render();
+      pointsBlock.replaceChild(point.element, pointEdit.element);
+      pointEdit.unrender();
+    };
 
-  //   pointEdit.onDelete = () => {
-  //     deletePoint(events, pointEdit);
-  //     pointsBlock.removeChild(pointEdit.element);
-  //     runAction(actionTypes.REMOVE_POINT, pointEdit.element.id);
-  //     pointEdit.unrender();
-  //   };
-  // }
+    pointEdit.onDelete = () => {
+      deletePoint(events, pointEdit);
+      pointsBlock.removeChild(pointEdit.element);
+      runAction(actionTypes.REMOVE_POINT, pointEdit.element.id);
+      pointEdit.unrender();
+    };
+  }
 };
 
-import { Price } from './total-price.js';
+import { Price } from "./total-price";
 
 let totalPrice;
 
@@ -120,7 +106,11 @@ observer.on((type) => {
 });
 
 buttonNewPoint.addEventListener(`click`, () => {
-  const newPointEdit = new EventItemEdit(EMPTY_POINT_DATA, state.destinations, state.offers);
+  const newPointEdit = new EventItemEdit(
+    EMPTY_POINT_DATA,
+    state.destinations,
+    state.offers
+  );
   newPointEdit.render();
   pointsBlock.insertBefore(newPointEdit.element, pointsBlock.firstChild);
 

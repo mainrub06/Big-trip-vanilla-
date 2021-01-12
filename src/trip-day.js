@@ -1,5 +1,5 @@
-import {Component} from './component';
-import {EventItem} from './eventItem';
+import { Component } from "./component";
+import { EventItem } from "./eventItem";
 
 export default class TravelDay extends Component {
   constructor(data) {
@@ -42,7 +42,9 @@ export default class TravelDay extends Component {
   get template() {
     const date = new Date(this._data.timestamp);
     const day = date.getDate();
-    const monthAndYear = date.toLocaleDateString(`en`, {formatMatcher: `month year`});
+    const monthAndYear = date.toLocaleDateString(`en`, {
+      formatMatcher: `month year`,
+    });
 
     return `<section class="trip-day">
               <article class="trip-day__info">

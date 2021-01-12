@@ -14,4 +14,4 @@ const fire = (payload) => {
   });
 };
 
-export default {on, off, fire};
+export default { on, off, fire };

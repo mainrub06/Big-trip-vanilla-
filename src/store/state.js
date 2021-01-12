@@ -1,7 +1,7 @@
 export const dataIn = {
   points: [],
   destinations: [],
-  offers: []
+  offers: [],
 };
 
 export default dataIn;

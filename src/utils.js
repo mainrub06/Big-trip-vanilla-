@@ -4,7 +4,8 @@ export const random = (min, max) => {
   return rand;
 };
 
-export const getRandomArrayItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+export const getRandomArrayItem = (arr) =>
+  arr[Math.floor(Math.random() * arr.length)];
 
 export const getClearDuration = (timeStart, timeEnd) => {
   const HOURS_IN_DAY = 12;
@@ -20,7 +21,7 @@ export const getClearDuration = (timeStart, timeEnd) => {
 
   return {
     hours: hoursDuration,
-    minutes: minutesDuration
+    minutes: minutesDuration,
   };
 };
 
@@ -71,7 +72,7 @@ export const removeElements = (class1, class2) => {
 
 export const EMPTY_POINT_DATA = {
   id: null,
-  type: {typeName: `taxi`, icon: `🚕`},
+  type: { typeName: `taxi`, icon: `🚕` },
   city: ``,
   destination: [],
   price: 0,
