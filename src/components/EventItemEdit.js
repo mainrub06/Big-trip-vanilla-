@@ -1,10 +1,10 @@
-import { Component } from "../src/component";
-import { DATA_POINTS } from "../src/data";
+import { Component } from "../core/Component";
+import { DATA_POINTS } from "../utils/data";
 
 import flatpickr from "flatpickr";
 import moment from "moment";
 
-export class EventItemEdit extends Component {
+class EventItemEdit extends Component {
   constructor(data, destinations, offersIn) {
     super();
     this._id = data.id;
@@ -307,7 +307,7 @@ export class EventItemEdit extends Component {
   }
 
   get template() {
-    return /* html*/ `<article class="point" id="${this._id}">
+    return `<article class="point" id="${this._id}">
     <form action="" method="get">
       <header class="point__header">
         <label class="point__date">
@@ -422,3 +422,5 @@ export class EventItemEdit extends Component {
   `;
   }
 }
+
+export default EventItemEdit;

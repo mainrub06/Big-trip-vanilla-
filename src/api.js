@@ -1,8 +1,6 @@
-import renderFilters from "../src/main";
-import { DATA_POINTS } from "../src/data";
-import ModelDestinations from "./destinations";
-import ModelOffers from "./offers";
-import moment from "moment";
+import { DATA_POINTS } from "./utils/data";
+import ModelDestinations from "./components/Destinations";
+import ModelOffers from "./components/Offers";
 
 const Method = {
   GET: `GET`,
@@ -58,7 +56,7 @@ export const toRow = (data) => {
   };
 };
 
-export default class API {
+export default class Api {
   constructor({ endPoint, authorization }) {
     this._endPoint = endPoint;
     this._authorization = authorization;

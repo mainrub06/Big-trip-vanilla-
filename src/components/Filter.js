@@ -1,7 +1,7 @@
-import { Component } from "../src/component";
-import { createElement } from "../src/utils";
+import { Component } from "../core/Component";
+import { createElement } from "../utils/utils";
 
-export class Filter extends Component {
+class Filter extends Component {
   constructor(data) {
     super();
     this._name = data.name;
@@ -57,7 +57,7 @@ export class Filter extends Component {
   }
 
   get template() {
-    return /* html*/ `<input type="radio"
+    return `<input type="radio"
     id="filter-${this._name}"
     name="filter"
     value="${this._name}"
@@ -67,3 +67,5 @@ export class Filter extends Component {
     }</label>`;
   }
 }
+
+export default Filter;

@@ -1,4 +1,4 @@
-import { createElement } from "../src/utils";
+import { createElement } from "../utils/utils";
 
 export class Component {
   constructor() {

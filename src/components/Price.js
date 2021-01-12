@@ -1,7 +1,7 @@
-import { Component } from "../src/component";
-import { createElement } from "../src/utils";
+import { Component } from "../core/Component";
+import { createElement } from "../utils/utils";
 
-export class Price extends Component {
+class Price extends Component {
   constructor(price) {
     super();
     this._price = price;
@@ -22,3 +22,5 @@ export class Price extends Component {
       </p>`;
   }
 }
+
+export default Price;

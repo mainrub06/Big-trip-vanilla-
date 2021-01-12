@@ -1,4 +1,4 @@
-import { random } from "../src/utils";
+import { random } from "./utils";
 
 export const FILTERS_ARRAY = [
   {

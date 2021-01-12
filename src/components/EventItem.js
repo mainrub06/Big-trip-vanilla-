@@ -1,9 +1,9 @@
-import { Component } from "../src/component";
-import { getClearDuration } from "../src/utils";
+import { Component } from "../core/Component";
+import { getClearDuration } from "../utils/utils";
 
 import moment from "moment";
 
-export class EventItem extends Component {
+class EventItem extends Component {
   constructor(data) {
     super();
     this._id = data.id;
@@ -30,7 +30,7 @@ export class EventItem extends Component {
   }
 
   get template() {
-    return /* html*/ `<article class="trip-point" id="${this._id}">
+    return `<article class="trip-point" id="${this._id}">
     <i class="trip-icon">${this._type.icon}</i>
     <h3 class="trip-point__title">${this._type.typeName} to ${this._city}</h3>
     <p class="trip-point__schedule">
@@ -98,3 +98,5 @@ export class EventItem extends Component {
     this._offers = data.offers;
   }
 }
+
+export default EventItem;
