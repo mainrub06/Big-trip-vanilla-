@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import state from './state';
+import _ from "lodash";
+import state from "./state";
 
 const getTotalPriceByPoint = (point) => {
   const offersPrice = point.offers
@@ -28,13 +28,12 @@ export const getTotalPrice = () => {
 export const getPointsGroups = () => {
   const groups = _.groupBy(state.points, getTimestampByPoint);
 
-  return Object.entries(groups)
-    .map((entry) => {
-      const [timestamp, points] = entry;
+  return Object.entries(groups).map((entry) => {
+    const [timestamp, points] = entry;
 
-      return {
-        points,
-        timestamp
-      };
-    });
+    return {
+      points,
+      timestamp,
+    };
+  });
 };

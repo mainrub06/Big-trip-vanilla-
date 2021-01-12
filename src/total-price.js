@@ -1,9 +1,5 @@
-import {
-  Component
-} from "../src/component.js";
-import {
-  createElement
-} from "../src/utils.js";
+import { Component } from "../src/component";
+import { createElement } from "../src/utils";
 
 export class Price extends Component {
   constructor(price) {

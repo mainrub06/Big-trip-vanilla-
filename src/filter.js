@@ -1,10 +1,5 @@
-import {
-  Component
-} from "../src/component.js";
-
-import {
-  createElement
-} from "../src/utils.js";
+import { Component } from "../src/component";
+import { createElement } from "../src/utils";
 
 export class Filter extends Component {
   constructor(data) {
@@ -34,11 +29,15 @@ export class Filter extends Component {
   }
 
   bind() {
-    this._element.querySelector(this._id).addEventListener(`click`, this._onFilterButtonClick);
+    this._element
+      .querySelector(this._id)
+      .addEventListener(`click`, this._onFilterButtonClick);
   }
 
   unbind() {
-    this._element.querySelector(this._id).removeEventListener(`click`, this._onFilterButtonClick);
+    this._element
+      .querySelector(this._id)
+      .removeEventListener(`click`, this._onFilterButtonClick);
   }
 
   render() {
@@ -63,6 +62,8 @@ export class Filter extends Component {
     name="filter"
     value="${this._name}"
     ${this._check ? `checked` : ``}>
-    <label class="trip-filter__item" for="filter-${this._name}">${this._name}</label>`;
+    <label class="trip-filter__item" for="filter-${this._name}">${
+      this._name
+    }</label>`;
   }
 }

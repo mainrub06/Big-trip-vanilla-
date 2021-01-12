@@ -13,4 +13,3 @@ export default class ModelDestinations {
     return data.map(ModelDestinations.parseDestination);
   }
 }
-

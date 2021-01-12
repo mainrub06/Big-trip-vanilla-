@@ -1,6 +1,4 @@
-import {
-  createElement
-} from "../src/utils.js";
+import { createElement } from "../src/utils";
 
 export class Component {
   constructor() {

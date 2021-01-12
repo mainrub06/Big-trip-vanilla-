@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const path = require(`path`);
 const HtmlWebpackPlugin = require(`html-webpack-plugin`);
@@ -6,16 +6,19 @@ const HtmlWebpackPlugin = require(`html-webpack-plugin`);
 module.exports = {
   mode: `development`, // Режим сборки
   entry: `./src/main.js`, // Точка входа приложения
-  output: { // Настройка выходного файла
+  output: {
+    // Настройка выходного файла
     filename: `bundle.js`,
-    path: path.join(__dirname, `/public`)
+    path: path.join(__dirname, `/public`),
   },
   devtool: `source-map`,
   module: {
-    rules: [{
-      test: /\.js$/,
-      use: `babel-loader`
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        use: `babel-loader`,
+      },
+    ],
   },
   devServer: {
     contentBase: path.join(__dirname, `public`), // Где искать сборку
@@ -24,6 +27,6 @@ module.exports = {
     // Автоматическая перезагрузка страницы
     // Если не работает по стандартному URLу в браузере ‘http:!/localhost:8080’,
     // то добавьте к нему ‘/webpack-dev-server/‘: ‘http:!/localhost:8080/webpack-dev-server/'
-    watchContentBase: true
-  }
+    watchContentBase: true,
+  },
 };

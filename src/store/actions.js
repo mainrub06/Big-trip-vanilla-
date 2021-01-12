@@ -1,9 +1,9 @@
-import state from './state';
-import observer from './observer';
-import * as actionTypes from './action-types';
-import API from '../../src/rest.js';
-import { toRow } from '../../src/rest.js';
-import { renderPoints } from '../../src/main.js';
+import state from "./state";
+import observer from "./observer";
+import * as actionTypes from "./action-types";
+import API from "../../src/rest.js";
+import { toRow } from "../../src/rest.js";
+import { renderPoints } from "../../src/main.js";
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
@@ -14,9 +14,8 @@ export const actions = {
     Promise.all([
       api.getPoints(),
       api.getOffers(),
-      api.getDestinations()
-    ])
-      .then((data) => runAction(actionTypes.SET_ALL_DATA, data));
+      api.getDestinations(),
+    ]).then((data) => runAction(actionTypes.SET_ALL_DATA, data));
   },
 
   [actionTypes.SET_POINT_DATA](data) {
@@ -28,7 +27,8 @@ export const actions = {
   },
 
   [actionTypes.UPDATE_POINT_DATA](data) {
-    api.updatePoint({ id: data.id, data })
+    api
+      .updatePoint({ id: data.id, data })
       .then((data) => runAction(actionTypes.SET_POINT_DATA, data));
   },
 
@@ -41,15 +41,14 @@ export const actions = {
   [actionTypes.PUSH_AND_RENDER_POINTS](newData) {
     state.points.push(newData);
     renderPoints(state.points, state.destinations, state.offers);
-    api.createPoint({ newData })
-      .then(toRow);
+    api.createPoint({ newData }).then(toRow);
   },
 
   [actionTypes.REMOVE_POINT](id) {
     state.points.splice(id, 1);
     renderPoints(state.points, state.destinations, state.offers);
     api.deleteTask({ id });
-  }
+  },
 };
 
 export const runAction = (type, payload) => {
