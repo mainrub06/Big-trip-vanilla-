@@ -1,5 +1,5 @@
-import { Component } from "./component";
-import { EventItem } from "./eventItem";
+import { Component } from "../core/Component";
+import EventItem from "./EventItem";
 
 export default class TravelDay extends Component {
   constructor(data) {

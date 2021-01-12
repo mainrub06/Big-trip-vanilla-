@@ -1,9 +1,9 @@
 import state from "./state";
 import observer from "./observer";
 import * as actionTypes from "./action-types";
-import API from "../../src/rest.js";
-import { toRow } from "../../src/rest.js";
-import { renderPoints } from "../../src/main.js";
+import API from "../../src/api";
+import { toRow } from "../../src/api";
+import { renderPoints } from "..";
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
