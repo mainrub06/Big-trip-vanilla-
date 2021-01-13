@@ -37,47 +37,11 @@ export const renderFilters = (events, destinations, offers) => {
 export const renderPoints = (events, destinations, offers) => {
   const groups = getters.getPointsGroups();
 
-  // console.log(groups);
-
   groups.forEach((data) => {
-    // console.log(data);
-
-    const tripDay = new TripDay(data);
+    const tripDay = new TripDay(data, destinations, offers);
 
     $tripPoints.appendChild(tripDay.render());
   });
-
-  // removeElements(`.trip-point`, `.point`);
-  // for (const event of events) {
-  //   const point = new EventItem(event);
-  //   const pointEdit = new EventItemEdit(event, destinations, offers);
-  //   point.render();
-  //   $pointsBlock.appendChild(point.element);
-  //   runAction(actionTypes.COUNT_PRICE, $totalPriceBlock);
-
-  //   point.onEdit = () => {
-  //     pointEdit.render();
-  //     $pointsBlock.replaceChild(pointEdit.element, point.element);
-  //     point.unrender();
-  //   };
-
-  //   pointEdit.onSubmit = (newData) => {
-  //     point.update(newData);
-  //     pointEdit.update(newData);
-  //     runAction(actionTypes.UPDATE_POINT_DATA, newData);
-  //     runAction(actionTypes.COUNT_PRICE, $totalPriceBlock);
-  //     point.render();
-  //     $pointsBlock.replaceChild(point.element, pointEdit.element);
-  //     pointEdit.unrender();
-  //   };
-
-  //   pointEdit.onDelete = () => {
-  //     deletePoint(events, pointEdit);
-  //     $pointsBlock.removeChild(pointEdit.element);
-  //     runAction(actionTypes.REMOVE_POINT, pointEdit.element.id);
-  //     pointEdit.unrender();
-  //   };
-  // }
 };
 
 let totalPrice;
@@ -102,8 +66,6 @@ observer.on((type) => {
     renderPoints(state.points, state.destinations, state.offers);
     renderFilters(state.points, state.destinations, state.offers);
   }
-
-  // console.log(state)
 
   if ([`SET_ALL_DATA`, `SET_POINT_DATA`].includes(type)) {
     renderTotalPrice();
