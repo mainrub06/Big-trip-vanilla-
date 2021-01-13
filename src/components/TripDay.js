@@ -57,6 +57,10 @@ export default class TravelDay extends Component {
         $items.removeChild(eventItemEdit.element);
         runAction(actionTypes.REMOVE_POINT, eventItemEdit.element.id);
         eventItemEdit.unrender();
+
+        if (this._data.points.length === 0) {
+          this.unrender();
+        }
       };
 
       return eventItem;
