@@ -20,14 +20,21 @@ export default class TravelDay extends Component {
     this._points = [];
     this._element = null;
     this._onRemove = null;
+    this._onSorting = null;
   }
 
   set onRemove(fn) {
     this._onRemove = fn;
   }
 
+  set onSorting(fnc) {
+    this._onSorting = fnc;
+  }
+
   renderPoints() {
-    const pointsData = this._data.points;
+    const pointsData = this._onSorting
+      ? this._onSorting(this._data.points)
+      : this._data.points;
     const $items = this._element.querySelector(`.trip-day__items`);
 
     this._points = pointsData.map((data) => {

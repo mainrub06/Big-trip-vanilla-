@@ -7,3 +7,4 @@ export const COUNT_PRICE = `COUNT_PRICE`;
 export const SET_POINT_DATA = `SET_POINT_DATA`;
 export const REMOVE_TRIP_DAY = `REMOVE_TRIP_DAY`;
 export const SET_FILTERED_POINTS = `SET_FILTERED_POINTS`;
+export const SET_SORTING = `SET_SORTING`;

@@ -4,7 +4,7 @@ import EventItemEdit from "./components/EventItemEdit";
 import Price from "./components/Price";
 import Stats from "./components/Stats";
 
-import { EMPTY_POINT_DATA } from "./utils/utils";
+import { EMPTY_POINT_DATA, smartSorting } from "./utils/utils";
 
 import { FILTERS_ARRAY } from "./utils/data";
 
@@ -13,7 +13,9 @@ import state from "./store/state";
 import * as getters from "./store/getters";
 import * as actionTypes from "./store/action-types";
 import { runAction } from "./store/actions";
+import Sort from "./components/Sort";
 
+const $contentWrap = document.querySelector(`.content-wrap`);
 const $filtersBlock = document.querySelector(`.trip-filter`);
 const $buttonNewPoint = document.querySelector(`.new-event`);
 const $pointsBlock = document.querySelector(`.trip-day__items`);
@@ -33,14 +35,27 @@ export const renderFilters = () => {
   });
 };
 
-export const renderPoints = (events, destinations, offers) => {
+export const renderSorting = () => {
+  const sorting = new Sort();
+
+  sorting.render();
+  $contentWrap.prepend(sorting.element);
+};
+
+renderSorting();
+
+export const renderPoints = (events, destinations, offers, sorting) => {
   const groups = getters.getPointsGroups();
 
   groups.forEach((data) => {
     const tripDay = new TripDay(data, destinations, offers);
 
+    tripDay.onSorting = (points) => smartSorting(points, sorting);
+
     tripDay.render();
+
     $tripPoints.appendChild(tripDay.element);
+
     tripDay.onRemove = () =>
       runAction(actionTypes.REMOVE_TRIP_DAY, [tripDay.element, $tripPoints]);
   });
@@ -65,7 +80,12 @@ runAction(actionTypes.FETCH_ALL_DATA);
 
 observer.on((type) => {
   if (type === `SET_ALL_DATA`) {
-    renderPoints(state.points, state.destinations, state.offers);
+    renderPoints(
+      state.points,
+      state.destinations,
+      state.offers,
+      state.filters.sorting
+    );
     renderFilters(state.points, state.destinations, state.offers);
   }
 

@@ -70,6 +70,39 @@ export const removeElements = (class1, class2) => {
   }
 };
 
+const sortByTime = (array) => array.sort((a, b) => a.time[0] - b.time[0]);
+
+const sortByPrice = (array, type = "up") => {
+  if (type !== "up") {
+    return array.sort((a, b) => a.price - b.price);
+  } else {
+    return array.sort((a, b) => b.price - a.price);
+  }
+};
+
+const sortByAlpabet = (array) =>
+  array.sort((a, b) => {
+    const fName = a.description.toLowerCase();
+    const sName = b.description.toLowerCase();
+
+    if (fName < sName) return -1;
+    if (fName > sName) return 1;
+    return 0;
+  });
+
+export const smartSorting = (array, type) => {
+  switch (type) {
+    case "event":
+      return sortByAlpabet(array);
+    case "time":
+      return sortByTime(array);
+    case "price":
+      return sortByPrice(array);
+    default:
+      return array;
+  }
+};
+
 export const EMPTY_POINT_DATA = {
   id: null,
   type: { typeName: `taxi`, icon: `🚕` },

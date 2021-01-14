@@ -2,6 +2,7 @@ import { Component } from "../core/Component";
 import { getClearDuration } from "../utils/utils";
 
 import moment from "moment";
+import { format } from "date-fns";
 
 class EventItem extends Component {
   constructor(data) {
@@ -62,15 +63,16 @@ class EventItem extends Component {
   }
 
   maketime(timeStart, timeEnd) {
-    let timeIn = moment(timeStart).format(`hh:mm`);
-    let timeOut = moment(timeEnd).format(`hh:mm`);
+    let timeIn = format(new Date(timeStart), "hh:mm aa");
+    let timeOut = format(new Date(timeEnd), "hh:mm aa");
     return `${timeIn}&nbsp;&mdash; ${timeOut}`;
   }
 
   makeDuration(timeStart, timeEnd) {
-    let timeIn = moment(timeStart).format(`hh:mm`).split(`:`);
-    let timeOut = moment(timeEnd).format(`hh:mm`).split(`:`);
+    let timeIn = format(new Date(timeStart), `hh:mm`).split(`:`);
+    let timeOut = format(new Date(timeEnd), `hh:mm`).split(`:`);
     let duration = getClearDuration(timeIn, timeOut);
+
     return `${duration.hours}h ${duration.minutes}m`;
   }
 

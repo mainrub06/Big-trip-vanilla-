@@ -41,7 +41,12 @@ export const actions = {
 
   [actionTypes.PUSH_AND_RENDER_POINTS](newData) {
     state.points.push(newData);
-    renderPoints(state.points, state.destinations, state.offers);
+    renderPoints(
+      state.points,
+      state.destinations,
+      state.offers,
+      state.filters.sorting
+    );
     api.createPoint({ newData }).then(toRow);
   },
 
@@ -53,12 +58,25 @@ export const actions = {
     parent.removeChild(child);
   },
   [actionTypes.SET_FILTERED_POINTS](type) {
+    // ToDo
+    document.querySelector(".trip-points").innerHTML = "";
+
     if (type === "everything") {
-      renderPoints(state.points, state.destinations, state.offers);
+      renderPoints(
+        state.points,
+        state.destinations,
+        state.offers,
+        state.filters.sorting
+      );
     } else {
       const filteredArray = Filter.getFilteredArray(type, state.points);
-      document.querySelector(".trip-points").innerHTML = "";
-      renderPoints(filteredArray, state.destinations, state.offers);
+
+      renderPoints(
+        filteredArray,
+        state.destinations,
+        state.offers,
+        state.filters.sorting
+      );
     }
   },
 };
