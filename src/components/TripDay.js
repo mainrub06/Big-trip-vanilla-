@@ -18,6 +18,12 @@ export default class TravelDay extends Component {
     this._offers = offers;
 
     this._points = [];
+    this._element = null;
+    this._onRemove = null;
+  }
+
+  set onRemove(fn) {
+    this._onRemove = fn;
   }
 
   renderPoints() {
@@ -70,11 +76,16 @@ export default class TravelDay extends Component {
   unrenderPoints() {
     const points = this._points;
 
-    points.forEach((point) => {
-      point.unrender();
-    });
+    if (this._data.points.length !== 0) {
+      points.forEach((point) => {
+        point.unrender();
+      });
+    }
 
     this._points = [];
+    if (this._onRemove) {
+      this._onRemove();
+    }
   }
 
   bind() {

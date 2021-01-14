@@ -46,8 +46,8 @@ class Filter extends Component {
     return this._element;
   }
 
-  getFilteredArray(array) {
-    switch (this._name) {
+  static getFilteredArray(type, array) {
+    switch (type) {
       case `future`:
         return array.filter((it) => Date.now() < it.time[0]);
       case `past`:

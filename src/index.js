@@ -1,11 +1,10 @@
 import TripDay from "./components/TripDay";
 import Filter from "./components/Filter";
-import EventItem from "./components/EventItem";
 import EventItemEdit from "./components/EventItemEdit";
 import Price from "./components/Price";
 import Stats from "./components/Stats";
 
-import { removeElements, deletePoint, EMPTY_POINT_DATA } from "./utils/utils";
+import { EMPTY_POINT_DATA } from "./utils/utils";
 
 import { FILTERS_ARRAY } from "./utils/data";
 
@@ -21,15 +20,15 @@ const $pointsBlock = document.querySelector(`.trip-day__items`);
 const $totalPriceBlock = document.querySelector(`.trip`);
 const $tripPoints = document.querySelector(`.trip-points`);
 
-export const renderFilters = (events, destinations, offers) => {
-  FILTERS_ARRAY.forEach((it) => {
-    const filter = new Filter(it);
+export const renderFilters = () => {
+  FILTERS_ARRAY.forEach((type) => {
+    const filter = new Filter(type);
+
     filter.render();
     $filtersBlock.appendChild(filter.element);
 
     filter.onFilter = () => {
-      const filteredArray = filter.getFilteredArray(events);
-      renderPoints(filteredArray, destinations, offers);
+      runAction(actionTypes.SET_FILTERED_POINTS, type.name);
     };
   });
 };
@@ -40,7 +39,10 @@ export const renderPoints = (events, destinations, offers) => {
   groups.forEach((data) => {
     const tripDay = new TripDay(data, destinations, offers);
 
-    $tripPoints.appendChild(tripDay.render());
+    tripDay.render();
+    $tripPoints.appendChild(tripDay.element);
+    tripDay.onRemove = () =>
+      runAction(actionTypes.REMOVE_TRIP_DAY, [tripDay.element, $tripPoints]);
   });
 };
 
@@ -96,7 +98,8 @@ const statBtn = document.querySelector(`.view-switch__item:nth-child(2)`);
 const tableBlock = document.querySelector(`.main`);
 const statBlock = document.querySelector(`.statistic`);
 
-const onTableBtn = () => {
+const onTableBtn = (e) => {
+  e.preventDefault();
   statBtn.classList.remove(`view-switch__item--active`);
   tableBtn.classList.add(`view-switch__item--active`);
   tableBlock.classList.remove(`visually-hidden`);
@@ -105,7 +108,8 @@ const onTableBtn = () => {
   statBtn.addEventListener(`click`, onStatBtn);
 };
 
-const onStatBtn = () => {
+const onStatBtn = (e) => {
+  e.preventDefault();
   statBtn.classList.add(`view-switch__item--active`);
   tableBtn.classList.remove(`view-switch__item--active`);
   tableBlock.classList.add(`visually-hidden`);

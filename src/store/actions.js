@@ -4,6 +4,7 @@ import * as actionTypes from "./action-types";
 import API from "../../src/api";
 import { toRow } from "../../src/api";
 import { renderPoints } from "..";
+import Filter from "../components/Filter";
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
@@ -46,8 +47,19 @@ export const actions = {
 
   [actionTypes.REMOVE_POINT](id) {
     state.points.splice(id, 1);
-    renderPoints(state.points, state.destinations, state.offers);
     api.deleteTask({ id });
+  },
+  [actionTypes.REMOVE_TRIP_DAY]([child, parent]) {
+    parent.removeChild(child);
+  },
+  [actionTypes.SET_FILTERED_POINTS](type) {
+    if (type === "everything") {
+      renderPoints(state.points, state.destinations, state.offers);
+    } else {
+      const filteredArray = Filter.getFilteredArray(type, state.points);
+      document.querySelector(".trip-points").innerHTML = "";
+      renderPoints(filteredArray, state.destinations, state.offers);
+    }
   },
 };
 
