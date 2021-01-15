@@ -78,7 +78,11 @@ class EventItemEdit extends Component {
   _onSubmitButtonClick(evt) {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`form`));
-    const newData = this._processForm(formData);
+    const newData = {
+      ...this._processForm(formData),
+      ...{ description: this._description, picture: this._picture },
+    };
+
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
     }
@@ -276,6 +280,7 @@ class EventItemEdit extends Component {
     this._time = data.time;
     this._price = data.price;
     this._offers = data.offers;
+    this._description = data.description;
   }
 
   makeOffer(offers) {

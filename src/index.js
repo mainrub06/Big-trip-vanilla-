@@ -4,7 +4,7 @@ import EventItemEdit from "./components/EventItemEdit";
 import Price from "./components/Price";
 import Stats from "./components/Stats";
 
-import { EMPTY_POINT_DATA, smartSorting } from "./utils/utils";
+import { EMPTY_POINT_DATA, smartSorting, deletePoint } from "./utils/utils";
 
 import { FILTERS_ARRAY } from "./utils/data";
 
@@ -15,7 +15,7 @@ import * as actionTypes from "./store/action-types";
 import { runAction } from "./store/actions";
 import Sort from "./components/Sort";
 
-const $contentWrap = document.querySelector(`.content-wrap`);
+const $contentWrap = document.querySelector(`.main`);
 const $filtersBlock = document.querySelector(`.trip-filter`);
 const $buttonNewPoint = document.querySelector(`.new-event`);
 const $pointsBlock = document.querySelector(`.trip-day__items`);
@@ -39,6 +39,7 @@ export const renderSorting = () => {
   const sorting = new Sort();
 
   sorting.render();
+  sorting.onChange = (type) => runAction(actionTypes.SET_SORTING, type);
   $contentWrap.prepend(sorting.element);
 };
 
@@ -101,15 +102,19 @@ $buttonNewPoint.addEventListener(`click`, () => {
     state.offers
   );
   newPointEdit.render();
-  $pointsBlock.insertBefore(newPointEdit.element, $pointsBlock.firstChild);
+
+  $tripPoints.prepend(newPointEdit.element);
 
   newPointEdit.onSubmit = (newData) => {
     newData.id = `${state.points.length}`;
+
     runAction(actionTypes.PUSH_AND_RENDER_POINTS, newData);
+    runAction(actionTypes.COUNT_PRICE, $totalPriceBlock);
   };
 
   newPointEdit.onDelete = () => {
-    $pointsBlock.removeChild(newPointEdit.element);
+    $tripPoints.removeChild(newPointEdit.element);
+    newPointEdit.unrender();
   };
 });
 

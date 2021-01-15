@@ -5,29 +5,30 @@ class Sort extends Component {
     super();
 
     this._handleChangeSorting = this._handleChangeSorting.bind(this);
+    this._onChange = null;
+
+    this.checkedValue = "time";
   }
 
-  renderSorting() {}
-
-  unrenderSorting() {}
+  set onChange(fn) {
+    this._onChange = fn;
+  }
 
   _handleChangeSorting(evt) {
     evt.preventDefault();
-    console.log(evt.target);
+    this.checkedValue = evt.target.value;
+
+    if (this._onChange) {
+      this._onChange(evt.target.value);
+    }
   }
 
   bind() {
-    this.renderSorting();
-    this._element
-      .querySelector(".trip-sorting")
-      .addEventListener("change", this._handleChangeSorting);
+    this._element.addEventListener("change", this._handleChangeSorting);
   }
 
   unbind() {
-    this.unrenderSorting();
-    this._element
-      .querySelector(".trip-sorting")
-      .removeEventListener("change", this._handleChangeSorting);
+    this._element.removeEventListener("change", this._handleChangeSorting);
   }
 
   get template() {
@@ -35,8 +36,8 @@ class Sort extends Component {
     <input type="radio" name="trip-sorting" id="sorting-event" value="event">
     <label class="trip-sorting__item trip-sorting__item--event" for="sorting-event">Event</label>
 
-    <input type="radio" name="trip-sorting" id="sorting-time" value="time">
-    <label class="trip-sorting__item trip-sorting__item--time" for="sorting-time" checked>Time</label>
+    <input type="radio" name="trip-sorting" id="sorting-time" value="time" checked>
+    <label class="trip-sorting__item trip-sorting__item--time" for="sorting-time">Time</label>
 
     <input type="radio" name="trip-sorting" id="sorting-price" value="price">
     <label class="trip-sorting__item trip-sorting__item--price" for="sorting-price">Price</label>

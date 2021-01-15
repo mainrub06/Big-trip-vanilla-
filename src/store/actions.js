@@ -7,7 +7,7 @@ import { renderPoints } from "..";
 import Filter from "../components/Filter";
 
 const AUTHORIZATION = `Basic eo0w590ik29889a=${Math.random()}`;
-const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip/`;
+const END_POINT = ` https://es8-demo-srv.appspot.com/big-trip`;
 const api = new API({ endPoint: END_POINT, authorization: AUTHORIZATION });
 
 export const actions = {
@@ -23,7 +23,7 @@ export const actions = {
     const index = state.points.findIndex((point) => point.id === data.id);
 
     if (index >= 0) {
-      state.points[index] = data;
+      state.points[index] = { ...state.points[index], ...data };
     }
   },
 
@@ -41,17 +41,25 @@ export const actions = {
 
   [actionTypes.PUSH_AND_RENDER_POINTS](newData) {
     state.points.push(newData);
+
+    // ToDo
+    document.querySelector(".trip-points").innerHTML = "";
+
+    console.log(state.points);
+
     renderPoints(
       state.points,
       state.destinations,
       state.offers,
       state.filters.sorting
     );
-    api.createPoint({ newData }).then(toRow);
+    api.createPoint({ newData });
   },
 
   [actionTypes.REMOVE_POINT](id) {
-    state.points.splice(id, 1);
+    const index = state.points.findIndex((point) => point.id === id);
+    state.points.splice(index, 1);
+
     api.deleteTask({ id });
   },
   [actionTypes.REMOVE_TRIP_DAY]([child, parent]) {
@@ -78,6 +86,17 @@ export const actions = {
         state.filters.sorting
       );
     }
+  },
+  [actionTypes.SET_SORTING](type) {
+    state.filters.sorting = type;
+    document.querySelector(".trip-points").innerHTML = "";
+
+    renderPoints(
+      state.points,
+      state.destinations,
+      state.offers,
+      state.filters.sorting
+    );
   },
 };
 

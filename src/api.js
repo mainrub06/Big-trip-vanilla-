@@ -28,12 +28,21 @@ export const parsePointData = (data) => {
     time: [data.date_from, data.date_to],
     city: data.destination.name,
     picture: data.destination.pictures,
-    price: parseFloat(data.base_price, 10),
+    price: Number(parseFloat(data.base_price, 10)),
     offers: data.offers,
     description: data.destination.description,
     favorite: data.is_favorite,
   };
 };
+
+export const parseUpdatedPoint = (data) => ({
+  id: data.id,
+  price: Number(data.base_price),
+  city: data.destination.name,
+  time: [data.date_from, data.date_to],
+  offers: data.offers,
+  favorite: data.is_favorite,
+});
 
 export const parsePointsListData = (dataList) => {
   return dataList.map(parsePointData);
@@ -88,7 +97,7 @@ export default class Api {
       headers: new Headers({ "Content-Type": `application/json` }),
     })
       .then(toJSON)
-      .then(parsePointData);
+      .then(parseUpdatedPoint);
   }
 
   createPoint({ task }) {
