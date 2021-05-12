@@ -23,7 +23,7 @@
     "webpack-dev-server": "3.2.1"
   },
   "dependencies": {
-    "chart.js": "2.8.0",
+    "chart.js": "2.9.4",
     "chartjs-plugin-datalabels": "0.6.0",
     "date-fns": "^2.16.1",
     "lodash": "4.17.11"
